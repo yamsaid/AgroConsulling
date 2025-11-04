@@ -1,0 +1,832 @@
+import os
+import json
+import csv
+import pdfplumber
+import re
+import requests
+from tqdm import tqdm
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+import logging
+from urllib.parse import urlparse
+from bs4 import BeautifulSoup
+import time
+import urllib.robotparser
+from urllib.parse import urljoin
+from pathlib import Path
+from typing import List, Dict, Optional, Tuple
+from dataclasses import dataclass, asdict
+import hashlib
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import nltk
+
+# Configuration du logging sans emojis
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('scraper.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+@dataclass
+class ScrapingResult:
+    """Structure pour les résultats de scraping"""
+    url: str
+    source_id: str
+    status: str
+    chunks_count: int
+    error_message: Optional[str] = None
+    content_type: Optional[str] = None
+    bytes_downloaded: int = 0
+    processing_time: float = 0.0
+    source_institution: Optional[str] = None
+
+class FrenchSmartSplitter:
+    """Splitter intelligent qui respecte les phrases françaises avec NLTK"""
+    
+    def __init__(self, chunk_size=450, overlap=50):
+        self.chunk_size = chunk_size
+        self.overlap = overlap
+        self._setup_nltk()
+    
+    def _setup_nltk(self):
+        """Configure NLTK avec gestion des erreurs"""
+        try:
+            # Vérifier punkt_tab (nouveau format NLTK pour français)
+            try:
+                nltk.data.find('tokenizers/punkt_tab')
+                logger.info("Modèles NLTK punkt_tab déjà installés")
+            except LookupError:
+                # Vérifier punkt (ancien format)
+                try:
+                    nltk.data.find('tokenizers/punkt')
+                    logger.info("Modèles NLTK punkt déjà installés")
+                except LookupError:
+                    raise LookupError("Aucun modèle NLTK trouvé")
+        except LookupError:
+            logger.info("Téléchargement des modèles NLTK...")
+            try:
+                # Contournement SSL pour le téléchargement
+                import ssl
+                try:
+                    _create_unverified_https_context = ssl._create_unverified_context
+                except AttributeError:
+                    pass
+                else:
+                    ssl._create_default_https_context = _create_unverified_https_context
+                
+                # Télécharger punkt_tab (nouveau format, supporte le français)
+                try:
+                    nltk.download('punkt_tab', quiet=True)
+                    logger.info("Modèle NLTK punkt_tab téléchargé avec succès!")
+                except Exception as e1:
+                    logger.warning(f"Échec téléchargement punkt_tab: {e1}, essai avec punkt...")
+                    # Fallback vers punkt (ancien format)
+                    nltk.download('punkt', quiet=True)
+                    logger.info("Modèle NLTK punkt téléchargé avec succès!")
+                    
+            except Exception as e:
+                logger.error(f"Erreur téléchargement NLTK: {e}")
+                logger.warning("Le tokenisation française pourrait ne pas fonctionner correctement")
+    
+    def split_text_respectueux(self, text):
+        """
+        Découpe le texte en respectant les phrases françaises
+        """
+        from nltk.tokenize import sent_tokenize
+        
+        if not text or len(text.strip()) == 0:
+            return []
+        
+        # Tokenisation en phrases françaises
+        try:
+            # Essayer avec punkt_tab (nouveau format)
+            try:
+                phrases = sent_tokenize(text, language='french')
+            except (LookupError, OSError) as e:
+                # Si punkt_tab n'est pas disponible, essayer sans spécifier la langue
+                logger.warning(f"Tokenisation française échouée, essai sans langue spécifique: {e}")
+                try:
+                    phrases = sent_tokenize(text)
+                except Exception as e2:
+                    logger.warning(f"Erreur tokenisation NLTK, utilisation fallback: {e2}")
+                    # Fallback: séparation par points
+                    phrases = [p.strip() for p in text.split('.') if p.strip()]
+                    phrases = [p + '.' for p in phrases if not p.endswith('.')]
+        except Exception as e:
+            logger.warning(f"Erreur tokenisation NLTK, utilisation fallback: {e}")
+            # Fallback: séparation par points
+            phrases = [p.strip() for p in text.split('.') if p.strip()]
+            phrases = [p + '.' for p in phrases if not p.endswith('.')]
+        
+        chunks = []
+        chunk_actuel = ""
+        longueur_actuelle = 0
+        
+        for phrase in phrases:
+            # Nettoyer la phrase
+            phrase = phrase.strip()
+            if not phrase:
+                continue
+                
+            longueur_phrase = len(phrase)
+            
+            # Vérifier si l'ajout dépasse la limite
+            if longueur_actuelle + longueur_phrase > self.chunk_size and chunk_actuel:
+                # Sauvegarder le chunk actuel
+                chunks.append(chunk_actuel.strip())
+                
+                # Préparer l'overlap pour le chunk suivant
+                if self.overlap > 0:
+                    phrases_overlap = self._obtenir_phrases_overlap(chunk_actuel)
+                    chunk_actuel = phrases_overlap
+                    longueur_actuelle = len(chunk_actuel)
+                else:
+                    chunk_actuel = ""
+                    longueur_actuelle = 0
+            
+            # Ajouter la phrase actuelle
+            if chunk_actuel:
+                # Ajouter un espace entre les phrases
+                chunk_actuel += " " + phrase
+                longueur_actuelle += longueur_phrase + 1
+            else:
+                chunk_actuel = phrase
+                longueur_actuelle = longueur_phrase
+        
+        # Ajouter le dernier chunk
+        if chunk_actuel and chunk_actuel.strip():
+            chunks.append(chunk_actuel.strip())
+        
+        return chunks
+    
+    def _obtenir_phrases_overlap(self, texte):
+        """Extrait les dernières phrases pour l'overlap"""
+        from nltk.tokenize import sent_tokenize
+        
+        try:
+            # Essayer avec langue française
+            try:
+                phrases = sent_tokenize(texte, language='french')
+            except (LookupError, OSError):
+                # Essayer sans langue spécifique
+                try:
+                    phrases = sent_tokenize(texte)
+                except Exception:
+                    # Fallback
+                    phrases = [p.strip() for p in texte.split('.') if p.strip()]
+                    phrases = [p + '.' for p in phrases if not p.endswith('.')]
+        except Exception:
+            # Fallback
+            phrases = [p.strip() for p in texte.split('.') if p.strip()]
+            phrases = [p + '.' for p in phrases if not p.endswith('.')]
+        
+        texte_overlap = ""
+        
+        # Prendre les phrases depuis la fin jusqu'à atteindre l'overlap
+        for phrase in reversed(phrases):
+            phrase = phrase.strip()
+            if not phrase:
+                continue
+                
+            if len(texte_overlap) + len(phrase) <= self.overlap:
+                texte_overlap = phrase + " " + texte_overlap if texte_overlap else phrase
+            else:
+                break
+        
+        return texte_overlap.strip()
+
+class EthicalWebScraper:
+    """Scraper éthique respectant robots.txt et les bonnes pratiques"""
+    
+    def __init__(self, delay_between_requests: float = 2.0, max_retries: int = 3):
+        self.delay = delay_between_requests
+        self.max_retries = max_retries
+        self.session = requests.Session()
+        self.session.headers.update({
+            'User-Agent': 'Academic-Research-Bot/1.0 for agricultural research in Burkina Faso',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
+        })
+        self.robot_parsers = {}
+        self.blocked_domains = set()
+        
+    def can_fetch(self, url: str) -> bool:
+        """Vérifie si l'URL peut être scrapée selon robots.txt"""
+        try:
+            parsed = urlparse(url)
+            base_url = f"{parsed.scheme}://{parsed.netloc}"
+            
+            # Cache pour domaines bloqués
+            if base_url in self.blocked_domains:
+                return False
+            
+            if base_url not in self.robot_parsers:
+                rp = urllib.robotparser.RobotFileParser()
+                robots_url = urljoin(base_url, '/robots.txt')
+                try:
+                    rp.set_url(robots_url)
+                    rp.read()
+                    self.robot_parsers[base_url] = rp
+                    logger.info(f"robots.txt charge pour {base_url}")
+                except Exception as e:
+                    logger.warning(f"Impossible de charger robots.txt pour {base_url}: {e}")
+                    self.robot_parsers[base_url] = None
+                    return True
+            
+            if self.robot_parsers[base_url] is None:
+                return True
+                
+            can_access = self.robot_parsers[base_url].can_fetch(
+                self.session.headers['User-Agent'], url
+            )
+            
+            if not can_access:
+                self.blocked_domains.add(base_url)
+                logger.warning(f"ACCES REFUSE par robots.txt: {url}")
+                
+            return can_access
+            
+        except Exception as e:
+            logger.error(f"Erreur verification robots.txt: {e}")
+            return False
+
+    def get_crawl_delay(self, url: str) -> float:
+        """Récupère le délai de crawl recommandé depuis robots.txt"""
+        try:
+            parsed = urlparse(url)
+            base_url = f"{parsed.scheme}://{parsed.netloc}"
+            
+            if base_url in self.robot_parsers and self.robot_parsers[base_url]:
+                delay = self.robot_parsers[base_url].crawl_delay(
+                    self.session.headers['User-Agent']
+                )
+                return delay if delay else self.delay
+        except:
+            pass
+        return self.delay
+
+    def respectful_request(self, url: str, method: str = 'GET', **kwargs) -> Optional[requests.Response]:
+        """Effectue une requête respectueuse avec gestion des erreurs"""
+        if not self.can_fetch(url):
+            logger.warning(f"ACCES INTERDIT par robots.txt: {url}")
+            return None
+        
+        crawl_delay = self.get_crawl_delay(url)
+        
+        for attempt in range(self.max_retries):
+            try:
+                time.sleep(crawl_delay)
+                
+                response = self.session.request(
+                    method, url, 
+                    timeout=30,
+                    allow_redirects=True,
+                    **kwargs
+                )
+                
+                if response.status_code == 429:
+                    retry_after = int(response.headers.get('Retry-After', 60))
+                    logger.warning(f"Rate limit atteint, attente de {retry_after}s")
+                    time.sleep(retry_after)
+                    continue
+                
+                response.raise_for_status()
+                return response
+                
+            except requests.exceptions.Timeout:
+                logger.warning(f"Timeout pour {url}, tentative {attempt + 1}/{self.max_retries}")
+                time.sleep(self.delay * (attempt + 1))
+                
+            except requests.exceptions.RequestException as e:
+                logger.error(f"Erreur requete {url} (tentative {attempt + 1}): {e}")
+                if attempt == self.max_retries - 1:
+                    return None
+                time.sleep(self.delay * (attempt + 1))
+                
+        return None
+
+class PDFProcessor:
+    """Traitement robuste des PDFs"""
+    
+    def __init__(self, output_folder: str):
+        self.output_folder = Path(output_folder)
+        # Utilisation du splitter intelligent pour les PDFs aussi
+        self.smart_splitter = FrenchSmartSplitter(chunk_size=450, overlap=50)
+        # Fallback avec LangChain
+        self.text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=500,
+            chunk_overlap=50,
+            length_function=len,
+            separators=["\n\n", "\n", ". ", "! ", "? ", " ", ""]
+        )
+    
+    def clean_text(self, text: str) -> str:
+        """Nettoyage avancé du texte"""
+        if not text:
+            return ""
+        
+        # Suppression caractères nuls et contrôle
+        text = re.sub(r'[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]', '', text)
+        
+        # Normalisation des espaces
+        text = re.sub(r'\n+', '\n', text)
+        text = re.sub(r' +', ' ', text)
+        text = re.sub(r'\t+', ' ', text)
+        
+        # Césures de mots
+        text = re.sub(r'(\w+)-\s*\n\s*(\w+)', r'\1\2', text)
+        
+        # Suppression patterns non désirés
+        text = re.sub(r'\[[^\]]*\]', '', text)
+        text = re.sub(r'\{[^\}]*\}', '', text)
+        
+        return text.strip()
+    
+    def process_single_pdf(self, pdf_path: str, source_id: str, source_institution: str) -> List[Dict]:
+        """Traitement d'un PDF unique avec institution source"""
+        chunks = []
+        
+        try:
+            with pdfplumber.open(pdf_path) as pdf:
+                full_text = []
+                
+                for page_num, page in enumerate(pdf.pages, 1):
+                    try:
+                        page_text = page.extract_text()
+                        if page_text:
+                            cleaned = self.clean_text(page_text)
+                            if cleaned:
+                                full_text.append(cleaned)
+                    except Exception as e:
+                        logger.warning(f"Erreur page {page_num} de {source_id}: {e}")
+                
+                if full_text:
+                    complete_text = "\n\n".join(full_text)
+                    
+                    # ESSAI DU CHUNKING INTELLIGENT D'ABORD
+                    try:
+                        text_chunks = self.smart_splitter.split_text_respectueux(complete_text)
+                        extraction_method = "smart_pdf"
+                    except Exception as e:
+                        logger.warning(f"Chunking intelligent échoué, fallback: {e}")
+                        text_chunks = self.text_splitter.split_text(complete_text)
+                        extraction_method = "fallback_pdf"
+                    
+                    for i, chunk in enumerate(text_chunks):
+                        if len(chunk.strip()) > 50:
+                            chunks.append({
+                                "chunk_id": f"{source_id}_pdf_chunk_{i}",
+                                "text": chunk.strip(),
+                                "source": os.path.basename(pdf_path),
+                                "source_institution": source_institution,
+                                "chunk_index": i,
+                                "total_chunks": len(text_chunks),
+                                "extraction_method": extraction_method,
+                                "char_length": len(chunk),
+                                "word_count": len(chunk.split())
+                            })
+                    
+                    logger.info(f"PDF {source_id}: {len(chunks)} chunks crees ({extraction_method})")
+                else:
+                    logger.warning(f"Aucun texte extrait du PDF {source_id}")
+                    
+        except Exception as e:
+            logger.error(f"Erreur traitement PDF {source_id}: {e}")
+        
+        return chunks
+
+class WebContentProcessor:
+    """Processeur de contenu web éthique et robuste"""
+    
+    def __init__(self, output_folder: str, csv_log_path: str = None):
+        self.output_folder = Path(output_folder)
+        self.output_folder.mkdir(parents=True, exist_ok=True)
+        
+        self.temp_folder = self.output_folder / "temp_downloads"
+        self.temp_folder.mkdir(exist_ok=True)
+        
+        self.csv_log_path = csv_log_path or self.output_folder / "scraping_log.csv"
+        
+        # Splitter intelligent NLTK pour le web
+        self.smart_splitter = FrenchSmartSplitter(chunk_size=450, overlap=50)
+        
+        # Fallback avec LangChain
+        self.text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=500,
+            chunk_overlap=50,
+            length_function=len,
+            separators=["\n\n", "\n", ". ", "! ", "? ", " ", ""]
+        )
+        
+        self.scraper = EthicalWebScraper(delay_between_requests=3)
+        self.pdf_processor = PDFProcessor(output_folder)
+        self.results: List[ScrapingResult] = []
+        
+        # Fichier pour enregistrer les sources
+        self.source_file = self.output_folder / "sources.txt"
+        
+        self._init_csv_log()
+        self._init_source_file()
+    
+    def _init_csv_log(self):
+        """Initialise le fichier CSV de log"""
+        if not self.csv_log_path.exists():
+            with open(self.csv_log_path, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=[
+                    'timestamp', 'url', 'source_id', 'status', 'chunks_count',
+                    'content_type', 'bytes_downloaded', 'processing_time', 'error_message', 'source_institution'
+                ])
+                writer.writeheader()
+    
+    def _init_source_file(self):
+        """Initialise le fichier sources.txt"""
+        if not self.source_file.exists():
+            with open(self.source_file, 'w', encoding='utf-8') as f:
+                f.write("# Fichier des sources traitées avec succès\n")
+                f.write("# Format: URL | Source/Institution | Date de traitement\n")
+                f.write("=" * 80 + "\n")
+    
+    def _log_to_csv(self, result: ScrapingResult):
+        """Enregistre un résultat dans le CSV"""
+        with open(self.csv_log_path, 'a', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=[
+                'timestamp', 'url', 'source_id', 'status', 'chunks_count',
+                'content_type', 'bytes_downloaded', 'processing_time', 'error_message', 'source_institution'
+            ])
+            row = asdict(result)
+            row['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            writer.writerow(row)
+    
+    def _log_source_to_file(self, url: str, source_institution: str, status: str = "success"):
+        """Enregistre la source dans le fichier sources.txt"""
+        if status == "success":
+            with open(self.source_file, 'a', encoding='utf-8') as f:
+                f.write(f"{url} | {source_institution} | {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+
+    def download_pdf_from_url(self, url: str, filename: str) -> Optional[str]:
+        """Téléchargement éthique de PDF"""
+        response = self.scraper.respectful_request(url)
+        if not response:
+            return None
+        
+        content_type = response.headers.get('content-type', '').lower()
+        
+        # Vérification PDF
+        is_pdf = (
+            'pdf' in content_type or 
+            url.lower().endswith('.pdf') or
+            response.content.startswith(b'%PDF')
+        )
+        
+        if not is_pdf:
+            logger.warning(f"L'URL ne contient pas de PDF: {url}")
+            return None
+        
+        pdf_path = self.temp_folder / filename
+        
+        try:
+            with open(pdf_path, 'wb') as f:
+                f.write(response.content)
+            
+            logger.info(f"PDF telecharge: {filename} ({len(response.content)} octets)")
+            return str(pdf_path)
+            
+        except Exception as e:
+            logger.error(f"Erreur sauvegarde PDF {filename}: {e}")
+            return None
+
+    def extract_text_from_webpage(self, url: str) -> Optional[str]:
+        """Extraction éthique de texte web"""
+        response = self.scraper.respectful_request(url)
+        if not response:
+            return None
+        
+        content_type = response.headers.get('content-type', '').lower()
+        if 'html' not in content_type and 'text' not in content_type:
+            logger.warning(f"Contenu non-HTML pour {url}: {content_type}")
+            return None
+        
+        try:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Suppression éléments non désirés
+            for element in soup(["script", "style", "nav", "header", "footer", 
+                                "aside", "form", "noscript", "iframe"]):
+                element.decompose()
+            
+            main_content = self._extract_main_content(soup)
+            text = main_content.get_text(separator='\n', strip=True) if main_content else soup.get_text(separator='\n', strip=True)
+            
+            # Nettoyage
+            lines = [line.strip() for line in text.splitlines() if line.strip()]
+            clean_text = '\n'.join(lines)
+            
+            if len(clean_text) > 200:
+                logger.info(f"Texte web extrait: {len(clean_text)} caracteres")
+                return clean_text
+            else:
+                logger.warning(f"Texte trop court: {len(clean_text)} caracteres")
+                return None
+                
+        except Exception as e:
+            logger.error(f"Erreur extraction web {url}: {e}")
+            return None
+
+    def _extract_main_content(self, soup: BeautifulSoup) -> Optional[BeautifulSoup]:
+        """Identification du contenu principal"""
+        selectors = [
+            'article', 'main', '[role="main"]',
+            '.content', '.main-content', '.post-content',
+            '.entry-content', '#content', '.article-body'
+        ]
+        
+        for selector in selectors:
+            content = soup.select_one(selector)
+            if content:
+                return content
+        
+        return soup.find('body')
+
+    def clean_text(self, text: str) -> str:
+        """Nettoyage avancé du texte"""
+        if not text:
+            return ""
+        
+        # Suppression caractères de contrôle
+        text = re.sub(r'[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]', '', text)
+        
+        # Normalisation espaces
+        text = re.sub(r'\n+', '\n', text)
+        text = re.sub(r' +', ' ', text)
+        text = re.sub(r'\t+', ' ', text)
+        
+        # Césures
+        text = re.sub(r'(\w+)-\s*\n\s*(\w+)', r'\1\2', text)
+        
+        # Nettoyage spécifique web
+        text = re.sub(r'<!--.*?-->', '', text, flags=re.DOTALL)
+        
+        return text.strip()
+
+    def smart_chunk_text(self, text: str, source_id: str, source_institution: str, url: str) -> List[Dict]:
+        """Découpe intelligent le texte en respectant les phrases avec NLTK"""
+        chunks = []
+        
+        try:
+            # ESSAI DU CHUNKING INTELLIGENT D'ABORD
+            text_chunks = self.smart_splitter.split_text_respectueux(text)
+            extraction_method = "smart_web"
+            
+        except Exception as e:
+            logger.warning(f"Chunking intelligent échoué pour {source_id}, fallback: {e}")
+            # FALLBACK VERS L'ANCIENNE METHODE
+            text_chunks = self.text_splitter.split_text(text)
+            extraction_method = "fallback_web"
+        
+        for i, chunk in enumerate(text_chunks):
+            if len(chunk.strip()) > 50:  # Éviter les chunks trop courts
+                chunks.append({
+                    "chunk_id": f"{source_id}_chunk_{i}",
+                    "text": chunk.strip(),
+                    "source": url,
+                    "source_url": url,
+                    "source_institution": source_institution,
+                    "chunk_index": i,
+                    "total_chunks": len(text_chunks),
+                    "extraction_method": extraction_method,
+                    "char_length": len(chunk),
+                    "word_count": len(chunk.split())
+                })
+        
+        logger.info(f"Chunking {source_id}: {len(chunks)} chunks crees ({extraction_method})")
+        return chunks
+
+    def process_url(self, url: str, source_id: str, source_institution: str) -> Tuple[List[Dict], ScrapingResult]:
+        """Traitement complet d'une URL avec institution source"""
+        start_time = time.time()
+        
+        logger.info(f"Traitement de: {url} (Source: {source_institution})")
+        
+        result = ScrapingResult(
+            url=url,
+            source_id=source_id,
+            status="failed",
+            chunks_count=0,
+            source_institution=source_institution
+        )
+        
+        if not self.scraper.can_fetch(url):
+            result.error_message = "Bloque par robots.txt"
+            result.status = "blocked"
+            self._log_to_csv(result)
+            return [], result
+        
+        parsed_url = urlparse(url)
+        filename = f"{source_id}_{os.path.basename(parsed_url.path) or 'document'}"
+        
+        chunks = []
+        
+        # Tentative PDF
+        if url.lower().endswith('.pdf') or 'pdf' in url.lower():
+            pdf_path = self.download_pdf_from_url(url, filename + '.pdf')
+            if pdf_path:
+                chunks = self.pdf_processor.process_single_pdf(pdf_path, source_id, source_institution)
+                result.content_type = "pdf"
+                
+                try:
+                    os.remove(pdf_path)
+                except:
+                    pass
+        
+        # Fallback web AVEC CHUNKING INTELLIGENT
+        if not chunks:
+            web_text = self.extract_text_from_webpage(url)
+            if web_text:
+                cleaned_text = self.clean_text(web_text)
+                # UTILISATION DU CHUNKING INTELLIGENT NLTK
+                chunks = self.smart_chunk_text(cleaned_text, source_id, source_institution, url)
+                result.content_type = "html"
+        
+        # Mise à jour résultat
+        if chunks:
+            for chunk in chunks:
+                chunk['source_url'] = url
+            
+            result.status = "success"
+            result.chunks_count = len(chunks)
+            # Enregistrement dans le fichier source
+            self._log_source_to_file(url, source_institution, "success")
+            logger.info(f"{source_id}: {len(chunks)} chunks crees")
+        else:
+            result.error_message = "Aucun contenu extractible"
+            self._log_source_to_file(url, source_institution, "failed")
+            logger.warning(f"Echec extraction: {url}")
+        
+        result.processing_time = time.time() - start_time
+        self._log_to_csv(result)
+        self.results.append(result)
+        
+        return chunks, result
+
+    def load_sources_from_csv(self, csv_path: str) -> Dict[str, str]:
+        """Charge les sources depuis le CSV historique"""
+        sources_map = {}
+        try:
+            with open(csv_path, 'r', encoding='utf-8') as f:
+                # Détection du délimiteur
+                sample = f.read(2048)
+                f.seek(0)
+                
+                # Essayer différents délimiteurs
+                for delimiter in [';', ',', '\t']:
+                    try:
+                        reader = csv.DictReader(f, delimiter=delimiter)
+                        if 'url' in reader.fieldnames and 'source' in reader.fieldnames:
+                            for row in reader:
+                                if row['url'] and row['source']:
+                                    sources_map[row['url']] = row['source']
+                            logger.info(f"Sources chargees depuis CSV avec delimiteur '{delimiter}': {len(sources_map)} entrees")
+                            return sources_map
+                        f.seek(0)
+                    except:
+                        f.seek(0)
+                        continue
+                
+                logger.error("Impossible de determiner le format du CSV")
+                
+        except Exception as e:
+            logger.error(f"Erreur chargement sources CSV {csv_path}: {e}")
+        
+        return sources_map
+
+    def process_urls_from_csv(self, csv_path: str, sources_csv_path: str, 
+                              url_column: str = 'url', id_column: str = 'id') -> List[Dict]:
+        """Traitement d'URLs depuis un CSV avec mapping des sources"""
+        urls_to_process = []
+        sources_map = self.load_sources_from_csv(sources_csv_path)
+        
+        try:
+            with open(csv_path, 'r', encoding='utf-8') as f:
+                sample = f.read(2048)
+                f.seek(0)
+                try:
+                    dialect = csv.Sniffer().sniff(sample)
+                except Exception:
+                    dialect = csv.excel
+                reader = csv.DictReader(f, dialect=dialect)
+                for row in reader:
+                    if url_column in row and id_column in row:
+                        url = row[url_column]
+                        source_id = row[id_column]
+                        # Récupération de la source depuis le mapping
+                        source_institution = sources_map.get(url, "Source inconnue")
+                        urls_to_process.append((url, source_id, source_institution))
+                    else:
+                        logger.error(f"Colonnes manquantes: {url_column}, {id_column}")
+                        break
+        except Exception as e:
+            logger.error(f"Erreur lecture CSV {csv_path}: {e}")
+            return []
+        
+        logger.info(f"{len(urls_to_process)} URLs chargees depuis CSV avec sources")
+        return self.process_urls(urls_to_process)
+
+    def process_urls(self, url_list: List[Tuple[str, str, str]]) -> List[Dict]:
+        """Traitement de liste d'URLs avec sources"""
+        all_chunks = []
+        
+        logger.info(f"Debut traitement de {len(url_list)} URLs...")
+        
+        for url, source_id, source_institution in tqdm(url_list, desc="Traitement URLs"):
+            chunks, result = self.process_url(url, source_id, source_institution)
+            if chunks:
+                all_chunks.extend(chunks)
+        
+        self._print_summary()
+        return all_chunks
+
+    def _print_summary(self):
+        """Affichage du rapport final"""
+        total = len(self.results)
+        success = sum(1 for r in self.results if r.status == "success")
+        blocked = sum(1 for r in self.results if r.status == "blocked")
+        failed = sum(1 for r in self.results if r.status == "failed")
+        
+        total_chunks = sum(r.chunks_count for r in self.results)
+        
+        # Statistiques des méthodes de chunking
+        smart_chunks = sum(1 for r in self.results if r.status == "success" and r.chunks_count > 0)
+        
+        logger.info("\n" + "="*60)
+        logger.info("RAPPORT DE SCRAPING AVEC NLTK")
+        logger.info("="*60)
+        logger.info(f"Total URLs traitees: {total}")
+        logger.info(f"Succes: {success}")
+        logger.info(f"Bloquees (robots.txt): {blocked}")
+        logger.info(f"Echecs: {failed}")
+        logger.info(f"Total chunks crees: {total_chunks}")
+        logger.info(f"Chunking intelligent: {smart_chunks} URLs")
+        logger.info(f"Log CSV: {self.csv_log_path}")
+        logger.info(f"Fichier sources: {self.source_file}")
+        logger.info("="*60)
+
+def main():
+    """Fonction principale"""
+    # Configuration
+    OUTPUT_FOLDER = "./data/processed"
+    CSV_INPUT = "./data/sources.csv"  # Fichier CSV avec URLs à traiter
+    SOURCES_CSV = "./data/sources.csv"  # Fichier CSV avec mapping des sources
+    CORPUS_OUTPUT = "./data/corpus.json"
+    
+    # Création dossiers
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    
+    # Initialisation processeur
+    processor = WebContentProcessor(OUTPUT_FOLDER)
+    
+    # Option 1: Traitement depuis CSV avec mapping des sources
+    if os.path.exists(CSV_INPUT) and os.path.exists(SOURCES_CSV):
+        logger.info(f"Chargement URLs depuis CSV: {CSV_INPUT}")
+        logger.info(f"Chargement sources depuis: {SOURCES_CSV}")
+        all_chunks = processor.process_urls_from_csv(
+            CSV_INPUT,
+            SOURCES_CSV,
+            url_column='url',
+            id_column='id'
+        )
+    else:
+        # Option 2: Liste manuelle avec sources
+        logger.info("Fichiers CSV non trouves, utilisation liste manuelle")
+        urls_to_process = [
+            ("https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/608/441", "revue_agriculture_1", "Sciences Naturelles et Appliquées"),
+            ("https://faolex.fao.org/docs/pdf/bkf198258.pdf", "fao_1", "FAO"),
+        ]
+        all_chunks = processor.process_urls(urls_to_process)
+    
+    # Sauvegarde corpus avec sources
+    if all_chunks:
+        with open(CORPUS_OUTPUT, 'w', encoding='utf-8') as f:
+            json.dump(all_chunks, f, ensure_ascii=False, indent=2)
+        logger.info(f"Corpus sauvegarde: {CORPUS_OUTPUT} ({len(all_chunks)} chunks)")
+        
+        # Rapport des sources utilisées
+        sources_used = set(chunk.get('source_institution', 'Inconnue') for chunk in all_chunks)
+        logger.info(f"Sources utilisees dans le corpus: {len(sources_used)}")
+        for source in sorted(sources_used):
+            count = sum(1 for chunk in all_chunks if chunk.get('source_institution') == source)
+            logger.info(f"  - {source}: {count} chunks")
+            
+        # Rapport des méthodes d'extraction
+        methods = set(chunk.get('extraction_method', 'Inconnu') for chunk in all_chunks)
+        logger.info(f"Methodes d'extraction utilisees: {len(methods)}")
+        for method in sorted(methods):
+            count = sum(1 for chunk in all_chunks if chunk.get('extraction_method') == method)
+            logger.info(f"  - {method}: {count} chunks")
+    else:
+        logger.warning("Aucun chunk cree, corpus non sauvegarde")
+
+if __name__ == "__main__":
+    main()
