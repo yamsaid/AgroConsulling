@@ -18,6 +18,7 @@ from dataclasses import dataclass, asdict
 import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import nltk
+import io
 
 # Configuration du logging sans emojis
 logging.basicConfig(
@@ -198,28 +199,30 @@ class FrenchSmartSplitter:
         
         return texte_overlap.strip()
 
-class EthicalWebScraper:
-    """Scraper éthique respectant robots.txt et les bonnes pratiques"""
+class StrictEthicalWebScraper:
+    """Scraper qui respecte STRICTEMENT robots.txt - Version hackathon"""
     
-    def __init__(self, delay_between_requests: float = 2.0, max_retries: int = 3):
+    def __init__(self, delay_between_requests: float = 5.0, max_retries: int = 2):
         self.delay = delay_between_requests
         self.max_retries = max_retries
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Academic-Research-Bot/1.0 for agricultural research in Burkina Faso',
+            'User-Agent': 'Academic-Research-Bot-Hackathon/1.0 (+https://github.com/our-project) for educational non-commercial research',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
+            'From': 'research@education.org',
         })
         self.robot_parsers = {}
         self.blocked_domains = set()
         
     def can_fetch(self, url: str) -> bool:
-        """Vérifie si l'URL peut être scrapée selon robots.txt"""
+        """
+        Respect STRICT du robots.txt - Aucun contournement
+        """
         try:
             parsed = urlparse(url)
             base_url = f"{parsed.scheme}://{parsed.netloc}"
             
-            # Cache pour domaines bloqués
             if base_url in self.blocked_domains:
                 return False
             
@@ -230,28 +233,30 @@ class EthicalWebScraper:
                     rp.set_url(robots_url)
                     rp.read()
                     self.robot_parsers[base_url] = rp
-                    logger.info(f"robots.txt charge pour {base_url}")
+                    logger.info(f"robots.txt chargé pour {base_url}")
+                    
                 except Exception as e:
                     logger.warning(f"Impossible de charger robots.txt pour {base_url}: {e}")
+                    # SI robots.txt inaccessible, on assume le pire cas
                     self.robot_parsers[base_url] = None
-                    return True
+                    return False  # Blocage par défaut si inaccessible
             
             if self.robot_parsers[base_url] is None:
-                return True
+                return False  # Blocage si robots.txt inaccessible
                 
             can_access = self.robot_parsers[base_url].can_fetch(
                 self.session.headers['User-Agent'], url
             )
             
             if not can_access:
-                self.blocked_domains.add(base_url)
                 logger.warning(f"ACCES REFUSE par robots.txt: {url}")
+                self.blocked_domains.add(base_url)
                 
             return can_access
             
         except Exception as e:
-            logger.error(f"Erreur verification robots.txt: {e}")
-            return False
+            logger.error(f"Erreur vérification robots.txt: {e}")
+            return False  # Blocage en cas d'erreur
 
     def get_crawl_delay(self, url: str) -> float:
         """Récupère le délai de crawl recommandé depuis robots.txt"""
@@ -269,12 +274,14 @@ class EthicalWebScraper:
         return self.delay
 
     def respectful_request(self, url: str, method: str = 'GET', **kwargs) -> Optional[requests.Response]:
-        """Effectue une requête respectueuse avec gestion des erreurs"""
+        """Requête ultra-respectueuse pour hackathon"""
+        
+        # Vérification STRICTE robots.txt
         if not self.can_fetch(url):
-            logger.warning(f"ACCES INTERDIT par robots.txt: {url}")
             return None
         
-        crawl_delay = self.get_crawl_delay(url)
+        # Délai conservateur
+        crawl_delay = max(self.get_crawl_delay(url), 5.0)  # Minimum 5 secondes
         
         for attempt in range(self.max_retries):
             try:
@@ -287,21 +294,43 @@ class EthicalWebScraper:
                     **kwargs
                 )
                 
+                # Respect des codes HTTP
+                if response.status_code == 403:
+                    logger.warning(f"Accès interdit (403) - Arrêt immédiat: {url}")
+                    self.blocked_domains.add(urlparse(url).netloc)
+                    return None
+                
                 if response.status_code == 429:
-                    retry_after = int(response.headers.get('Retry-After', 60))
-                    logger.warning(f"Rate limit atteint, attente de {retry_after}s")
+                    retry_after = int(response.headers.get('Retry-After', 120))  # 2 minutes
+                    logger.warning(f"Rate limit détecté - Pause de {retry_after}s: {url}")
                     time.sleep(retry_after)
+                    continue
+                
+                if response.status_code == 503:
+                    logger.warning(f"Service indisponible (503) - Pause longue: {url}")
+                    time.sleep(60)  # Pause d'1 minute
                     continue
                 
                 response.raise_for_status()
                 return response
                 
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code in [403, 404, 500, 503]:
+                    logger.warning(f"Erreur HTTP {e.response.status_code} - Arrêt: {url}")
+                    return None
+                logger.error(f"Erreur HTTP pour {url}: {e}")
+                if attempt == self.max_retries - 1:
+                    return None
+                time.sleep(self.delay * (attempt + 1))
+                
             except requests.exceptions.Timeout:
                 logger.warning(f"Timeout pour {url}, tentative {attempt + 1}/{self.max_retries}")
+                if attempt == self.max_retries - 1:
+                    return None
                 time.sleep(self.delay * (attempt + 1))
                 
             except requests.exceptions.RequestException as e:
-                logger.error(f"Erreur requete {url} (tentative {attempt + 1}): {e}")
+                logger.error(f"Erreur requête {url} (tentative {attempt + 1}): {e}")
                 if attempt == self.max_retries - 1:
                     return None
                 time.sleep(self.delay * (attempt + 1))
@@ -421,12 +450,15 @@ class WebContentProcessor:
             separators=["\n\n", "\n", ". ", "! ", "? ", " ", ""]
         )
         
-        self.scraper = EthicalWebScraper(delay_between_requests=3)
+        # Utilisation du scraper éthique strict
+        self.scraper = StrictEthicalWebScraper(delay_between_requests=5.0)
         self.pdf_processor = PDFProcessor(output_folder)
         self.results: List[ScrapingResult] = []
         
         # Fichier pour enregistrer les sources
         self.source_file = self.output_folder / "sources.txt"
+        # Fichier pour les URLs bloquées
+        self.blocked_file = self.output_folder / "blocked_urls_report.json"
         
         self._init_csv_log()
         self._init_source_file()
@@ -466,36 +498,73 @@ class WebContentProcessor:
             with open(self.source_file, 'a', encoding='utf-8') as f:
                 f.write(f"{url} | {source_institution} | {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
 
-    def download_pdf_from_url(self, url: str, filename: str) -> Optional[str]:
-        """Téléchargement éthique de PDF"""
+    def download_content_with_auto_detect(self, url: str, source_id: str) -> Optional[Tuple[str, str]]:
+        """
+        Télécharge le contenu avec détection automatique du type
+        Retourne (chemin_fichier, type_contenu) ou None
+        """
         response = self.scraper.respectful_request(url)
         if not response:
             return None
         
         content_type = response.headers.get('content-type', '').lower()
+        content_length = len(response.content)
         
-        # Vérification PDF
+        # Vérifier si le contenu est trop petit
+        if content_length < 100:
+            logger.warning(f"Contenu trop petit: {url} ({content_length} octets)")
+            return None
+        
+        parsed_url = urlparse(url)
+        filename = f"{source_id}_{hashlib.md5(url.encode()).hexdigest()[:8]}"
+        
+        # DÉTECTION PDF AVANCÉE
         is_pdf = (
             'pdf' in content_type or 
             url.lower().endswith('.pdf') or
-            response.content.startswith(b'%PDF')
+            response.content.startswith(b'%PDF') or
+            '.pdf' in response.headers.get('content-disposition', '').lower() or
+            # Règles spécifiques pour les APIs connues
+            any(domain in url for domain in [
+                'openknowledge.fao.org',
+                'cgspace.cgiar.org', 
+                'agritrop.cirad.fr',
+                'hal.archives-ouvertes.fr'
+            ]) and content_length > 50000  # Fichiers > 50KB sur ces domaines
         )
         
-        if not is_pdf:
-            logger.warning(f"L'URL ne contient pas de PDF: {url}")
-            return None
+        if is_pdf:
+            file_path = self.temp_folder / f"{filename}.pdf"
+            try:
+                with open(file_path, 'wb') as f:
+                    f.write(response.content)
+                
+                # Validation PDF
+                try:
+                    with pdfplumber.open(file_path) as test_pdf:
+                        if len(test_pdf.pages) > 0:
+                            logger.info(f"PDF valide detecte: {url} ({len(test_pdf.pages)} pages)")
+                            return str(file_path), "pdf"
+                        else:
+                            logger.warning(f"PDF invalide (0 pages): {url}")
+                            os.remove(file_path)
+                            return None
+                except Exception as e:
+                    logger.warning(f"Fichier non-PDF: {url} - {e}")
+                    os.remove(file_path)
+                    return None
+                    
+            except Exception as e:
+                logger.error(f"Erreur sauvegarde PDF {url}: {e}")
+                return None
         
-        pdf_path = self.temp_folder / filename
+        # DÉTECTION HTML/TEXTE
+        elif 'html' in content_type or 'text' in content_type or content_length < 1000000:
+            return None  # Laissé à extract_text_from_webpage
         
-        try:
-            with open(pdf_path, 'wb') as f:
-                f.write(response.content)
-            
-            logger.info(f"PDF telecharge: {filename} ({len(response.content)} octets)")
-            return str(pdf_path)
-            
-        except Exception as e:
-            logger.error(f"Erreur sauvegarde PDF {filename}: {e}")
+        # TYPE INCONNU - Essayer de détecter
+        else:
+            logger.warning(f"Type de contenu inconnu: {url} - Content-Type: {content_type}")
             return None
 
     def extract_text_from_webpage(self, url: str) -> Optional[str]:
@@ -604,8 +673,69 @@ class WebContentProcessor:
         logger.info(f"Chunking {source_id}: {len(chunks)} chunks crees ({extraction_method})")
         return chunks
 
+    def fallback_download_and_analyze(self, url: str, source_id: str, source_institution: str) -> List[Dict]:
+        """Fallback ultime pour le contenu problématique"""
+        response = self.scraper.respectful_request(url)
+        if not response or len(response.content) < 100:
+            return []
+        
+        content = response.content
+        chunks = []
+        
+        # Essayer PDF même sans signature
+        if len(content) > 1000:  # Fichier assez grand
+            temp_path = self.temp_folder / f"fallback_{source_id}.bin"
+            
+            try:
+                # Sauvegarder et tester comme PDF
+                with open(temp_path, 'wb') as f:
+                    f.write(content)
+                
+                # Essayer d'ouvrir avec pdfplumber
+                try:
+                    with pdfplumber.open(temp_path) as pdf:
+                        full_text = []
+                        for page in pdf.pages:
+                            page_text = page.extract_text()
+                            if page_text:
+                                full_text.append(self.clean_text(page_text))
+                        
+                        if full_text:
+                            complete_text = "\n\n".join(full_text)
+                            text_chunks = self.smart_splitter.split_text_respectueux(complete_text)
+                            
+                            for i, chunk in enumerate(text_chunks):
+                                if len(chunk.strip()) > 50:
+                                    chunks.append({
+                                        "chunk_id": f"{source_id}_fallback_pdf_chunk_{i}",
+                                        "text": chunk.strip(),
+                                        "source": url,
+                                        "source_url": url,
+                                        "source_institution": source_institution,
+                                        "chunk_index": i,
+                                        "total_chunks": len(text_chunks),
+                                        "extraction_method": "fallback_pdf_detection",
+                                        "char_length": len(chunk)
+                                    })
+                            
+                            logger.info(f"PDF detecte en fallback: {url} ({len(chunks)} chunks)")
+                except:
+                    pass  # Ce n'est pas un PDF
+                    
+                finally:
+                    # Nettoyage
+                    try:
+                        os.remove(temp_path)
+                    except:
+                        pass
+                        
+            except Exception as e:
+                logger.warning(f"Erreur analyse fallback {url}: {e}")
+        
+        return chunks
+
     def process_url(self, url: str, source_id: str, source_institution: str) -> Tuple[List[Dict], ScrapingResult]:
-        """Traitement complet d'une URL avec institution source"""
+        """Traitement complet d'une URL avec détection de contenu avancée"""
         start_time = time.time()
         
         logger.info(f"Traitement de: {url} (Source: {source_institution})")
@@ -624,31 +754,36 @@ class WebContentProcessor:
             self._log_to_csv(result)
             return [], result
         
-        parsed_url = urlparse(url)
-        filename = f"{source_id}_{os.path.basename(parsed_url.path) or 'document'}"
-        
         chunks = []
         
-        # Tentative PDF
-        if url.lower().endswith('.pdf') or 'pdf' in url.lower():
-            pdf_path = self.download_pdf_from_url(url, filename + '.pdf')
-            if pdf_path:
-                chunks = self.pdf_processor.process_single_pdf(pdf_path, source_id, source_institution)
+        # ÉTAPE 1: Tentative de téléchargement avec détection automatique
+        downloaded_content = self.download_content_with_auto_detect(url, source_id)
+        
+        if downloaded_content:
+            file_path, content_type = downloaded_content
+            if content_type == "pdf":
+                chunks = self.pdf_processor.process_single_pdf(file_path, source_id, source_institution)
                 result.content_type = "pdf"
                 
+                # Nettoyage du fichier temporaire
                 try:
-                    os.remove(pdf_path)
+                    os.remove(file_path)
                 except:
                     pass
         
-        # Fallback web AVEC CHUNKING INTELLIGENT
+        # ÉTAPE 2: Fallback - Extraction web standard
         if not chunks:
             web_text = self.extract_text_from_webpage(url)
             if web_text:
                 cleaned_text = self.clean_text(web_text)
-                # UTILISATION DU CHUNKING INTELLIGENT NLTK
                 chunks = self.smart_chunk_text(cleaned_text, source_id, source_institution, url)
                 result.content_type = "html"
+        
+        # ÉTAPE 3: Fallback ultime - Téléchargement direct pour analyse
+        if not chunks:
+            chunks = self.fallback_download_and_analyze(url, source_id, source_institution)
+            if chunks:
+                result.content_type = "binary_analyzed"
         
         # Mise à jour résultat
         if chunks:
@@ -657,9 +792,8 @@ class WebContentProcessor:
             
             result.status = "success"
             result.chunks_count = len(chunks)
-            # Enregistrement dans le fichier source
             self._log_source_to_file(url, source_institution, "success")
-            logger.info(f"{source_id}: {len(chunks)} chunks crees")
+            logger.info(f"{source_id}: {len(chunks)} chunks crees (methode: {result.content_type})")
         else:
             result.error_message = "Aucun contenu extractible"
             self._log_source_to_file(url, source_institution, "failed")
@@ -702,6 +836,43 @@ class WebContentProcessor:
         
         return sources_map
 
+    def handle_blocked_urls(self, urls_to_process: List[Tuple[str, str, str]]) -> Dict:
+        """
+        Analyse les URLs et identifie celles bloquées par robots.txt
+        Retourne un rapport détaillé
+        """
+        blocked_report = {
+            'total_urls': len(urls_to_process),
+            'blocked_urls': [],
+            'accessible_urls': [],
+            'blocked_domains': set()
+        }
+        
+        logger.info("Analyse préliminaire du robots.txt...")
+        
+        for url, source_id, source_institution in tqdm(urls_to_process, desc="Vérification robots.txt"):
+            if self.scraper.can_fetch(url):
+                blocked_report['accessible_urls'].append((url, source_id, source_institution))
+            else:
+                blocked_report['blocked_urls'].append((url, source_id, source_institution))
+                domain = urlparse(url).netloc
+                blocked_report['blocked_domains'].add(domain)
+        
+        # Rapport détaillé
+        logger.info("\n" + "="*60)
+        logger.info("RAPPORT ROBOTS.TXT")
+        logger.info("="*60)
+        logger.info(f"URLs totales: {blocked_report['total_urls']}")
+        logger.info(f"URLs accessibles: {len(blocked_report['accessible_urls'])}")
+        logger.info(f"URLs bloquées: {len(blocked_report['blocked_urls'])}")
+        logger.info(f"Domaines bloqués: {len(blocked_report['blocked_domains'])}")
+        
+        for domain in sorted(blocked_report['blocked_domains']):
+            count = sum(1 for url, _, _ in blocked_report['blocked_urls'] if domain in url)
+            logger.info(f"  - {domain}: {count} URLs bloquées")
+        
+        return blocked_report
+
     def process_urls_from_csv(self, csv_path: str, sources_csv_path: str, 
                               url_column: str = 'url', id_column: str = 'id') -> List[Dict]:
         """Traitement d'URLs depuis un CSV avec mapping des sources"""
@@ -732,7 +903,22 @@ class WebContentProcessor:
             return []
         
         logger.info(f"{len(urls_to_process)} URLs chargees depuis CSV avec sources")
-        return self.process_urls(urls_to_process)
+        
+        # ANALYSE PRELIMINAIRE DES BLOQUAGES
+        blocked_report = self.handle_blocked_urls(urls_to_process)
+        
+        # SAUVEGARDE DU RAPPORT DES BLOQUAGES
+        with open(self.blocked_file, 'w', encoding='utf-8') as f:
+            json.dump({
+                'blocked_urls': blocked_report['blocked_urls'],
+                'blocked_domains': list(blocked_report['blocked_domains']),
+                'accessible_urls_count': len(blocked_report['accessible_urls']),
+                'blocked_urls_count': len(blocked_report['blocked_urls']),
+                'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
+            }, f, ensure_ascii=False, indent=2)
+        
+        # TRAITEMENT SEULEMENT DES URLs AUTORISEES
+        return self.process_urls(blocked_report['accessible_urls'])
 
     def process_urls(self, url_list: List[Tuple[str, str, str]]) -> List[Dict]:
         """Traitement de liste d'URLs avec sources"""
@@ -771,14 +957,15 @@ class WebContentProcessor:
         logger.info(f"Chunking intelligent: {smart_chunks} URLs")
         logger.info(f"Log CSV: {self.csv_log_path}")
         logger.info(f"Fichier sources: {self.source_file}")
+        logger.info(f"Rapport blocages: {self.blocked_file}")
         logger.info("="*60)
 
 def main():
     """Fonction principale"""
     # Configuration
     OUTPUT_FOLDER = "./data/processed"
-    CSV_INPUT = "./data/sources.csv"  # Fichier CSV avec URLs à traiter
-    SOURCES_CSV = "./data/sources.csv"  # Fichier CSV avec mapping des sources
+    CSV_INPUT = "./data/source2.csv"  # Fichier CSV avec URLs à traiter
+    SOURCES_CSV = "./data/source2.csv"  # Fichier CSV avec mapping des sources
     CORPUS_OUTPUT = "./data/corpus.json"
     
     # Création dossiers
