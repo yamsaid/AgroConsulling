@@ -900,7 +900,7 @@ class AgriculturalRAGAPI:
 
 # Instance globale
 api_instance = AgriculturalRAGAPI(
-    use_faiss=False,            # Utiliser FAISS (plus rapide)
+    use_faiss=True,            # Utiliser FAISS (plus rapide)
     enable_cache=True,          # Activer cache
     enable_rate_limit=True      # Activer rate limiting
 )
