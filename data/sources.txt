@@ -1,0 +1,504 @@
+id;url;source
+1;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/608/441;Sciences Naturelles et Appliquées
+2;https://faolex.fao.org/docs/pdf/bkf198258.pdf;FAO
+3;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1282/1061;Sciences Naturelles et Appliquées
+4;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/609/442;Sciences Naturelles et Appliquées
+5;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1279/1063;Sciences Naturelles et Appliquées
+6;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/611/444;Sciences Naturelles et Appliquées
+7;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1277/1056;Sciences Naturelles et Appliquées
+8;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/585/417;Sciences Naturelles et Appliquées
+9;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1274/1053;Sciences Naturelles et Appliquées
+10;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1269/1048;Sciences Naturelles et Appliquées
+11;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1268/1045;Sciences Naturelles et Appliquées
+12;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1267/1044;Sciences Naturelles et Appliquées
+13;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1283/1065;Sciences Naturelles et Appliquées
+14;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/588/420;Sciences Naturelles et Appliquées
+15;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1252/1030;Sciences Naturelles et Appliquées
+16;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1250/1027;Sciences Naturelles et Appliquées
+17;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1249/1026;Sciences Naturelles et Appliquées
+18;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1248/1025;Sciences Naturelles et Appliquées
+19;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/639/468;Sciences Naturelles et Appliquées
+20;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/627/457;Sciences Naturelles et Appliquées
+21;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1242/1020;Sciences Naturelles et Appliquées
+22;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/631/463;Sciences Naturelles et Appliquées
+23;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/624/456;Sciences Naturelles et Appliquées
+24;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/872/759;Sciences Naturelles et Appliquées
+25;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1612/1339;Sciences Naturelles et Appliquées
+26;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1609/1336;Sciences Naturelles et Appliquées
+27;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/864/767;Sciences Naturelles et Appliquées
+28;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1608/1335;Sciences Naturelles et Appliquées
+29;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/871/760;Sciences Naturelles et Appliquées
+30;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1603/1329;Sciences Naturelles et Appliquées
+31;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/883/748;Sciences Naturelles et Appliquées
+32;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/863/768;Sciences Naturelles et Appliquées
+33;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1601/1327;Sciences Naturelles et Appliquées
+34;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/880/751;Sciences Naturelles et Appliquées
+35;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/870/761;Sciences Naturelles et Appliquées
+36;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/865/766;Sciences Naturelles et Appliquées
+37;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/693/515;Sciences Naturelles et Appliquées
+38;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/697/524;Sciences Naturelles et Appliquées
+39;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1085/894;Sciences Naturelles et Appliquées
+40;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1053/866;Sciences Naturelles et Appliquées
+41;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/995/818;Sciences Naturelles et Appliquées
+42;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/994/817;Sciences Naturelles et Appliquées
+43;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/988/810;Sciences Naturelles et Appliquées
+44;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/996/819;Sciences Naturelles et Appliquées
+45;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/990/990;Sciences Naturelles et Appliquées
+46;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/993/989;Sciences Naturelles et Appliquées
+47;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1684/1421;Sciences Naturelles et Appliquées
+48;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1650/1347;Sciences Naturelles et Appliquées
+49;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1693/1432;Sciences Naturelles et Appliquées
+50;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/381/251;Sciences Naturelles et Appliquées
+51;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1781/1481;Sciences Naturelles et Appliquées
+52;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1773/1494;Sciences Naturelles et Appliquées
+53;https://openknowledge.fao.org/server/api/core/bitstreams/3b57b6f2-326d-4dda-8b2b-6a0ac35aa5d9/content;FAO
+54;https://openknowledge.fao.org/server/api/core/bitstreams/8437de84-044a-4fa8-9ce0-7575ece6532d/content;FAO
+55;https://openknowledge.fao.org/server/api/core/bitstreams/d5b474e3-825b-4d4f-ab47-8cc2d956523c/content;FAO
+56;https://openknowledge.fao.org/server/api/core/bitstreams/5600429b-cee4-4674-8c96-e2717ec0155c/content;FAO
+57;https://openknowledge.fao.org/server/api/core/bitstreams/09e2e870-6d19-4eae-9036-94fdde138034/content;FAO
+58;https://openknowledge.fao.org/server/api/core/bitstreams/4c0b9b5c-9864-43a6-b524-f7a9b3c23ba8/content;FAO
+59;https://openknowledge.fao.org/server/api/core/bitstreams/f1945f9e-8b91-4c80-9942-3e167219c5fd/content;FAO
+60;https://openknowledge.fao.org/server/api/core/bitstreams/f431ec30-7d02-4bb9-b9e4-18aeca96ef74/content;FAO
+61;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1777/1495;Sciences Naturelles et Appliquées
+62;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1843/1479;Sciences Naturelles et Appliquées
+63;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1780/1493;Sciences Naturelles et Appliquées
+64;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1771/1482;Sciences Naturelles et Appliquées
+65;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1783/1497;Sciences Naturelles et Appliquées
+66;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1776/1496;Sciences Naturelles et Appliquées
+67;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1726/1498;Sciences Naturelles et Appliquées
+68;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1789/1516;Sciences Naturelles et Appliquées
+69;https://www.spcpsa.bf/wp-content/uploads/2023/12/Loi-N%C2%B0070-2015-relatif-LOASPHF-et-DECRETS.pdf;SPCPSA Burkina Faso
+70;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/612/445;Sciences Naturelles et Appliquées
+71;https://www.finances.gov.bf/fileadmin/user_upload/storage/PNDES-II_Document_de_Strategie.pdf;Ministère des Finances Burkina Faso
+72;https://www.doc-developpement-durable.org/file/Culture/Agriculture/catalogues-de-semences/ecteur%20semencier%20au%20Burkina%20Faso-Recommandations%20pour%20une%20meilleure%20integration%20des%20producteurs.pdf;Doc Développement Durable
+73;https://www.afriqueverte.org/r2_public/media/fck/File/Documentation/Semences/f1-systeme-semencier-national-au-mali-et-ses-acteurs.pdf;Afrique Verte
+74;https://riceforafrica.net/wp-content/uploads/2021/10/SS1_Burkina-Faso-2016-2020.fr_.pdf;Africa Rice Center
+75;https://agritrop.cirad.fr/596069/1/Working-paper-02-Coex.pdf;CIRAD
+76;https://www.rescar.org/storage/dossier_file_article/conseil-agricole-et-transition-agroecologique-au-burkina-faso-1741009232.pdf;RESCAR
+77;https://www.rescar.org/storage/dossier_file_etudePublication/strategie-nationale-de-conseil-agricole-du-burkina-faso-a-lhorizon-2025-1709125910.pdf;RESCAR
+78;https://documents1.worldbank.org/curated/en/099122924113523949/pdf/P175382-0a9faaad-daf3-46a6-9794-0287d4ea80a1.pdf;Banque Mondiale
+79;https://redd.unfccc.int/uploads/2_301_burkina_faso_cgp_vf.pdf;UNFCCC
+80;https://agritrop.cirad.fr/614774/1/Rapport%20FAIR%2006%20-%20Int%C3%A9gration%20AE%20Burkina%2003.pdf;CIRAD
+81;https://www.canr.msu.edu/fsp/publications/research-papers/RP%20169f.pdf;Michigan State University
+82;https://manageresistancenow.ca/wp-content/uploads/2019/05/FR-How-to-manage-fungicide-resistance-in-your-crops.pdf;Manage Resistance Now
+83;https://pdfs.semanticscholar.org/55ae/41a724d54b1948dde7863b59de3b56aea82a.pdf;Semantic Scholar
+84;https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers16-05/15205.pdf;IRD
+85;http://portails.cilss.bf/documents/3038.pdf;CILSS
+86;https://scispace.com/pdf/problematique-de-mise-en-oeuvre-du-systeme-de-riziculture-6eb69qtda9.pdf;SciSpace
+87;https://agritrop.cirad.fr/585511/1/Boni-et-al2017.pdf;CIRAD
+88;https://academicjournals.org/journal/JDAE/article-full-text-pdf/C4CE3FA73741.pdf;Academic Journals
+89;https://www.agrireseau.net/documents/Document_97303.pdf;AgriRéseau
+90;https://www.ippc.int/static/media/files/cn_publication/2019/05/15/Rapport_chenille_2018_vf.pdf;IPPC
+91;https://reca-niger.org/IMG/pdf/Bulletin_special_Chenille.pdf;RECA Niger
+92;https://www.doc-developpement-durable.org/file/Culture/Agriculture/articles-Wikipedia/Ravageurs-des-c%C3%A9r%C3%A9ales_Wikipedia-Fr.pdf;Doc Développement Durable
+93;https://www.doc-developpement-durable.org/file/Culture/Outils-&-bonnes-pratiques-travail-de-la-Terre/bonnes-pratiques-agricoles/r%C3%A9alisation_za%C3%AF.pdf;Doc Développement Durable
+94;https://www.issuelab.org/resources/20120/20120.pdf;IssueLab
+95;https://www.insd.bf/sites/default/files/2021-03/Manuel_0405v2.pdf;INSD Burkina Faso
+96;https://www.nitidae.org/files/acf8fe1c/manuel_de_formation_darda.pdf;NITIDAE
+97;https://www.inter-reseaux.org/wp-content/uploads/pdf_Geopol-_cot-_ASOM-_Version_revue_2.pdf;Inter-réseaux
+98;https://beep.ird.fr/collect/upb/index/assoc/IDR-2014-KAB-ITI/IDR-2014-KAB-ITI.pdf;IRD
+99;https://www.gafspfund.org/sites/default/files/inline-files/6a.%20Burkina%20Faso_Agriculture%20and%20Food%20Security%20Strategy.pdf;GAFSP
+100;https://www.araa.org/sites/default/files/2025-05/%5B2025%5D%20Guide%20de%20capitalisation%20des%20bonnes%20pratiques%20agro%C3%A9cologiques%20FR_3.pdf;ARAA
+101;https://agritrop.cirad.fr/300355/1/ID_300355.pdf;CIRAD
+102;https://hal.science/tel-03284249v1/file/THESE%20CONTRIBUTION%20A%20L%27ETUDE%20DE%20LA%20%20PERFORMANCE%20DE%20LA%20FILIERE%20COTON-1.pdf;HAL Archives Ouvertes
+103;https://www.araa.org/sites/default/files/2024-06/4.2_Guide%20de%20bonnes%20pratiques_Burkina%20Faso_v2.1.pdf;ARAA
+104;https://agritrop.cirad.fr/568277/1/document_568277.pdf;CIRAD
+105;https://www.jica.go.jp/Resource/burkinafaso/french/activities/c8h0vm0000fhi9nb-att/activity04_03_03_01.pdf;JICA
+106;https://www.gwp.org/contentassets/b109e662dd1b494daeae3d02542fbbf8/guides-technique---burkina-faso.pdf;GWP
+107;https://www.nitidae.org/files/db0aced8/3_sesame_web.pdf;NITIDAE
+108;https://ag.purdue.edu/department/agecon/_docs/international-programs/ipim-sahel-french/fiche-technique-sorgo.pdf;Purdue University
+109;https://www.iita.org/wp-content/uploads/2020/05/Cowpea-manual-FRENCH_VERSION.pdf;IITA
+110;https://ifdc.org/wp-content/uploads/2019/07/FICHE-TECHNIQUE-1-ITINERAIRE-TECHNIQUE-DU-MAI%CC%88S-MAIZE-TECHNICAL-ITINERARY.pdf;IFDC
+111;https://agritrop.cirad.fr/526770/1/ID526770.pdf;CIRAD
+112;https://www.inter-reseaux.org/wp-content/uploads/Albert_Barro11.pdf;Inter-réseaux
+113;https://reca-niger.org/IMG/pdf/fiche_technique_pour_le_repiquage_du_mil.pdf;RECA Niger
+114;https://www.inter-reseaux.org/wp-content/uploads/Catalogue-AFS-ProSol-04-12-2020.pdf;Inter-réseaux
+115;https://www.beep.ird.fr/greenstone/collect/upb/index/assoc/IDR-2015-GUI-OPT/IDR-2015-GUI-OPT.pdf;IRD
+116;https://www.sustlives.eu/wp-content/uploads/2021/02/Module-4_Itineraires-techniques-de-production-des-legumineuses.pdf;SustLives Project
+117;https://beep.ird.fr/collect/upb/index/assoc/IDR-2002-MIL-DIA/IDR-2002-MIL-DIA.pdf;IRD
+118;https://milecole.org/wp-content/uploads/2025/04/Module_Post_recolte.pdf;MiLeCole
+119;https://agritrop.cirad.fr/331559/1/ID331559.pdf;CIRAD
+120;https://cna-burkina.org/IMG/pdf/fiches_techniques_pv.pdf;CNA Burkina
+121;https://faolex.fao.org/docs/pdf/bkf198252.pdf;FAO
+122;https://beep.ird.fr/collect/upb/index/assoc/IDR-2004-DIB-ANA/IDR-2004-DIB-ANA.pdf;IRD
+123;https://bibliovirtuelle.u-naziboni.bf/biblio/opac_css/docnume/idr/environnement/IDR-2016-GNO-ADA.pdf;Université Nazi Boni
+124;https://orbi.uliege.be/bitstream/2268/33221/1/279.pdf;Université de Liège
+125;https://www.beep.ird.fr/greenstone/collect/upb/index/assoc/IDR-2017-AMA-ANA/IDR-2017-AMA-ANA.pdf;IRD
+126;https://faolex.fao.org/docs/pdf/bkf217823.pdf;FAO
+127;https://www.burkinadoc.milecole.org/wp-content/uploads/2025/04/Microorganismes-Efficaces_EM_Recette.pdf;MiLeCole
+128;https://www.burkinadoc.milecole.org/wp-content/uploads/2025/04/EM_Microorganismes-Efficaces_Diaporama.pdf;MiLeCole
+129;https://burkinadoc.milecole.org/wp-content/uploads/2024/05/Fiche_Engrais_NPK_bio_liquide.pdf;MiLeCole
+130;https://www.burkinadoc.milecole.org/wp-content/uploads/2025/04/Fumier-recycle_Recette.pdf;MiLeCole
+131;https://www.burkinadoc.milecole.org/wp-content/uploads/2025/04/Fumier-Bokashi_Recette.pdf;MiLeCole
+132;https://www.burkinadoc.milecole.org/wp-content/uploads/2025/04/Fumier-Bokashi_Diaporama.pdf;MiLeCole
+133;https://www.cariassociation.org/wp-content/uploads/2023/09/2023_FT_GTD_cordons_pierreux.pdf;CARDI
+134;https://faolex.fao.org/docs/pdf/bkf198223.pdf;FAO
+135;https://www.sustlives.eu/wp-content/uploads/2021/02/Module-8_Agroecologie-et-la-gestion-des-eaux-et-des-sols-CES-DRS.pdf;SustLives Project
+136;https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers09-00/010033564.pdf;IRD
+137;https://reca-niger.org/IMG/pdf/Bonnes__pratiques-CES-DRS-GIZ.pdf;RECA Niger
+138;https://www.agrisource.org/medias/eb5a9a68-ac5f-4a7b-a2dd-65fc4cc4e148.pdf;Agrisource
+139;https://www.agrisource.org/medias/4f242883-7ca5-4f91-dd47-796dce245952.pdf;Agrisource
+140;https://www.agrisource.org/medias/f9ae2dce-04ef-4d87-b852-3d4b5ff8ad47.pdf;Agrisource
+141;https://www.agrisource.org/medias/351e1fd8-b309-4e73-c1c7-edf21a362ee7.pdf;Agrisource
+142;https://www.agrisource.org/medias/ddf7c41d-7ad1-4466-909e-ab7a05da9343.pdf;Agrisource
+143;https://www.agrisource.org/medias/4814790d-5c40-4267-cf16-fac11016867e.pdf;Agrisource
+144;https://www.agrisource.org/medias/799578bf-2910-4ea3-e691-ec319bd8f59c.pdf;Agrisource
+145;https://www.agrisource.org/medias/6ae40687-f8f9-4a9d-c01d-9bde136fe32c.pdf;Agrisource
+146;http://cns.bf/IMG/pdf/sonagess_annuaire_des_prix_des_produits_agricoles_2022.pdf;CNS Burkina
+147;http://cns.bf/IMG/pdf/rapport_general_campagne_2014-2015_vf.pdf;CNS Burkina
+148;http://cns.bf/IMG/pdf/tableau_de_bord_statistique_2021.pdf;CNS Burkina
+149;https://www.fao.org/fileadmin/user_upload/iarbic/doc/1_fiche_microdoses-2%5B1%5D.pdf;FAO
+150;https://www.afriquescience.net/admin/postpdfs/d9ad5fbf37846e5ef9bbe0a9c7b56ea01721777155.pdf;Afrique Science
+151;https://www.researchgate.net/profile/Sanon-Abdramane/publication/359859247_CARACTERISTIQUES_CHIMIQUES_D'UN_LIXISOL_SOUS_LES_EFFETS_SYNERGIQUES_DE_BIODECHETS_ET_DE_FERTILISANTS_MINERAUX_DANS_LA_ZONE_SUD-_SOUDANIENNE_DU_BURKINA_FASO/links/6252dbb0b0cee02d69613292/CARACTERISTIQUES-CHIMIQUES-DUN-LIXISOL-SOUS-LES-EFFETS-SYNERGIQUES-DE-BIODECHETS-ET-DE-FERTILISANTS-MINERAUX-DANS-LA-ZONE-SUD-SOUDANIENNE-DU-BURKINA-FASO.pdf;ResearchGate
+152;https://beep.ird.fr/greenstone/collect/upb/index/assoc/IDR-2014-PIZ-REP/IDR-2014-PIZ-REP.pdf;IRD
+153;https://agritrop.cirad.fr/587753/1/SAPAA_2018_Engrais_Burkina_VF.pdf;CIRAD
+154;https://www.retssa-ci.com/pages/Numero5/SOMA/4-Tome-1.Retssa-Vol.3-N%c2%b05-Juin%202020.pdf;RETSSA
+155;https://documents1.worldbank.org/curated/en/657171623259265463/pdf/Pest-Management-Plan-PMP-West-Africa-Food-System-Resilience-Program-FSRP-P172769.pdf;Banque Mondiale
+156;https://files.core.ac.uk/download/pdf/59355671.pdf;Core AC UK
+157;https://www.afriquescience.net/admin/postpdfs/7aa40e953983490b7310b22325c50f281720199037.pdf;Afrique Science
+158;https://www.afdb.org/sites/default/files/pgpp_-_mise_a_la_disposition_des_producteurs_de_10_000_litres_de_pesticides_et_2_500_litres_de_produits_de_traitements_contre_laflatoxine_la_lutte_contre_les_nuisibles_des_plantes_notamment_la_chenille_legionnaire.pdf;Banque Africaine de Développement
+159;https://www.inter-reseaux.org/wp-content/uploads/pdf_Guide_Oignon_Mogtedo_Final.pdf;Inter-réseaux
+160;https://awm-solutions.iwmi.org/wp-content/uploads/sites/12/documents/Country_Docs/Burkina/rapport_awm-s_korsimoro_21nov.pdf;IWMI
+161;https://documents1.worldbank.org/curated/en/565881468006638132/pdf/SFG1817-V2-RP-FRENCH-P119662-PUBLIC-Disclosed-2-15-2016.pdf;Banque Mondiale
+162;https://www.gwp.org/globalassets/global/gwp-waf_files/rapport-dc-cle-massili-nord-1.pdf;GWP
+163;http://cns.bf/IMG/pdf/annuaire_agriculture_2020_def.pdf;CNS Burkina
+164;http://wamis.gmu.edu/countries/burkina/bad19012.pdf;GMU WAMIS
+165;https://avaclim.org/wp-content/uploads/2021/03/Maraichage_Factsheet_FR_VF.pdf;AVACLIM Project
+166;https://agritrop.cirad.fr/591600/1/Rapport%20complet%20Maraichage%20RCI%20CIRAD%20FIRCA%20VF%20%202019.pdf;CIRAD
+167;https://agritrop.cirad.fr/604682/1/RPP_07.04.23_WP2_thematique_Analyse%20Fonctionnelle.pdf;CIRAD
+168;https://revuegeographieouaga.com/wp-content/uploads/2023/06/02RGO_00_article-1_FCO-2.pdf;Revue Géographie Ouaga
+169;https://weadapt.org/wp-content/uploads/2023/05/4f736de8d6aecbognini-draft-final-cc-projectplace-132140-.pdf;WEAdapt
+170;https://www.swedenabroad.se/globalassets/ambassader/burkina-faso-ouagadougou/documents/study-1.pdf;Ambassade de Suède
+171;https://bibliovirtuelle.u-naziboni.bf/biblio/opac_css/docnume/UFR-SJPEG/IDR62016-KAG-IMP.pdf;Université Nazi Boni
+172;https://www.beep.ird.fr/greenstone/collect/upb/index/assoc/IDR-2015-SAW-GEN/IDR-2015-SAW-GEN.pdf;IRD
+173;https://www.swedenabroad.se/globalassets/ambassader/burkina-faso-ouagadougou/documents/study-2-and-6.pdf;Ambassade de Suède
+174;https://beep.ird.fr/collect/upb/index/assoc/IDR-2003-PAN-PRO/IDR-2003-PAN-PRO.pdf;IRD
+175;https://bibliovirtuelle.u-naziboni.bf/biblio/opac_css/docnume/UFR-SJPEG/IDR-2017-KAN-EVA.pdf;Université Nazi Boni
+176;https://orbi.uliege.be/bitstream/2268/222753/1/Th%C3%A8se_SON.pdf;Université de Liège
+177;https://hal.science/hal-05223010v1/file/04_TAP_RGO_N%C2%B013%20v1%20DAO%20et%20al.pdf;HAL Archives Ouvertes
+178;http://cns.bf/IMG/pdf/rga_maraichage_derniere_version.pdf;CNS Burkina
+179;https://www.afriquescience.net/admin/postpdfs/45137aea096a052c97a0bcfc6aecf7be1756279664.pdf;Afrique Science
+180;https://beep.ird.fr/greenstone/collect/upb/index/assoc/IDR-2016-GUI-OPT/IDR-2016-GUI-OPT.pdf;IRD
+181;https://agritrop.cirad.fr/450525/1/ID450525.pdf;CIRAD
+182;https://m.elewa.org/Journals/wp-content/uploads/2023/04/5.Kafando-1.pdf;Elewa Journals
+183;https://agritrop.cirad.fr/580973/1/Rapport%20final%20etude%20impact%20programmes%20SP%20sorgho%20Burkina%20juin%202016.pdf;CIRAD
+184;https://agritrop.cirad.fr/606737/1/Raboin%20et%20al_Cah%20Agric_23.pdf;CIRAD
+185;https://www.m.elewa.org/Journals/wp-content/uploads/2022/09/9.Blagna.pdf;Elewa Journals
+186;https://www.m.elewa.org/Journals/wp-content/uploads/2022/11/2.Toe_.pdf;Elewa Journals
+187;https://agritrop.cirad.fr/564903/1/ID564903.pdf;CIRAD
+188;https://ageconsearch.umn.edu/record/270986/files/idwp159.pdf;University of Minnesota
+189;https://openknowledge.fao.org/server/api/core/bitstreams/01738e0b-25fc-4a41-8dfb-38afc03ab88a/content;FAO
+190;https://openknowledge.fao.org/server/api/core/bitstreams/9686c175-ac1c-49fe-84b4-d4223acccd35/content;FAO
+191;https://openknowledge.fao.org/server/api/core/bitstreams/6d8f98d7-7ad6-4348-ad11-8fcca0e3decb/content;FAO
+192;https://openknowledge.fao.org/server/api/core/bitstreams/e68f6a40-03a1-4047-823b-8c62bc979156/content;FAO
+193;https://openknowledge.fao.org/server/api/core/bitstreams/cb056acd-6ea3-4e48-b1be-5a64ecbbe884/content;FAO
+194;https://openknowledge.fao.org/server/api/core/bitstreams/cad6dc69-f105-47f7-a3b9-f9e5823671c8/content;FAO
+195;https://www.ajol.info/index.php/ijbcs/article/view/242268;AJOL
+196;https://popups.uliege.be/1780-4507/index.php?id=17321&file=1&pid=1235;Université de Liège
+197;https://www.ajol.info/index.php/ijbcs/article/view/158834;AJOL
+198;https://journal.uts.bf/index.php/cedres/article/view/94/88;CEDRES Journal
+199;https://journal.uts.bf/index.php/cedres/article/view/107/96;CEDRES Journal
+200;https://journal.uts.bf/index.php/cedres/article/view/139/130;CEDRES Journal
+201;https://openknowledge.fao.org/server/api/core/bitstreams/78891da5-7811-4479-87c9-9157b22eca65/content;FAO
+202;https://scholar.google.com/scholar?start=20&q=sorghum+cultivation+Burkina+Faso&hl=fr&lr=lang_fr&as_sdt=2007&as_vis=1;Google Scholar
+203;https://scholar.google.com/scholar?start=10&q=sorghum+cultivation+Burkina+Faso&hl=fr&lr=lang_fr&as_sdt=2007&as_vis=1;Google Scholar
+204;https://publication.lecames.org/index.php/svt/article/view/34757/1537;Le CAMES
+205;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/567/403;Sciences Naturelles et Appliquées
+206;https://pugoma.com/index.php/UNIGOM/article/view/146/103;PUGOMA
+207;https://www.revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/1779/1480;Sciences Naturelles et Appliquées
+208;https://cgspace.cgiar.org/server/api/core/bitstreams/1784e92a-6708-4710-b30f-df96673f880e/content;CGIAR
+209;https://d-nb.info/120318686X/34;Deutsche Nationalbibliothek
+210;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/view/793/675;Sciences Naturelles et Appliquées
+211;https://www.cabidigitallibrary.org/doi/pdf/10.5555/20073012752;CABI
+212;https://digitalcommons.unl.edu/cgi/viewcontent.cgi?article=1003&context=intsormilusaidmali;University of Nebraska-Lincoln
+213;https://hal.science/hal-04999171/document;HAL Archives Ouvertes
+214;https://afrsj.com/index.php/AfricanScientificJournal/article/download/461/427;African Scientific Journal
+215;https://www.agriculture.bf/wp-content/uploads/2025/10/BF_PGPP_PATA.version-definitive.Publie-1.pdf;Ministère de l'Agriculture Burkina Faso
+216;https://www.agriculture.bf/wp-content/uploads/2025/10/Rapport_NIES_Magasin-Banfora_PURPA-BF-2_version-va_251016_124535.pdf;Ministère de l'Agriculture Burkina Faso
+217;https://www.agriculture.bf/wp-content/uploads/2025/10/Rapport_NIES_Magasin-Ziniare_PURPA-BF-2_version-va_251016_162220.pdf;Ministère de l'Agriculture Burkina Faso
+218;https://shs.cairn.info/article/EDD_333_0101/pdf?lang=fr;Cairn.info
+219;https://www.researchgate.net/profile/Rahim-Romba/publication/350108776_Evaluation_des_risques_lies_aux_pratiques_phytosanitaires_des_producteurs_maraichers_et_mise_en_evidence_de_la_resistance_aux_pesticides_chez_l'aleurode_Bemisia_tabaci_Hemiptera_Aleyrodidae_au_Burkina/links/6051f681a6fdccbfeae67fcd/Evaluation-des-risques-lies-aux-pratiques-phytosanitaires-des-producteurs-maraichers-et-mise-en-evidence-de-la-resistance-aux-pesticides-chez-laleurode-Bemisia-tabaci-Hemiptera-Aleyrodidae-au-Burkina.pdf?_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicGFnZSI6InB1YmxpY2F0aW9uIn19;ResearchGate
+220;https://www.researchgate.net/profile/Souleymane-Nacro/publication/360342569_Le_systeme_surveillance_de_surveillance_phytosanitaire_et_d'intervention_sur_seuils_au_perimetre_rizicole_de_la_Vallee_du_Kou/links/6271349e2f9ccf58eb2966b4/Le-systeme-surveillance-de-surveillance-phytosanitaire-et-dintervention-sur-seuils-au-perimetre-rizicole-de-la-Vallee-du-Kou.pdf?_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicGFnZSI6InB1YmxpY2F0aW9uIn19;ResearchGate
+221;https://www.researchgate.net/profile/Souleymane-Nacro/publication/360342569_Le_systeme_surveillance_de_surveillance_phytosanitaire_et_d%27intervention_sur_seuils_au_perimetre_rizicole_de_la_Vallee_du_Kou/links/6271349e2f9ccf58eb2966b4/Le-systeme-surveillance-de-surveillance-phytosanitaire-et-dintervention-sur-seuils-au-perimetre-rizicole-de-la-Vallee-du-Kou.pdf?origin=publication_detail&_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicGFnZSI6InB1YmxpY2F0aW9uRG93bmxvYWQiLCJwcmV2aW91c1BhZ2UiOiJwdWJsaWNhdGlvbiJ9fQ&__cf_chl_tk=TzjYcXnEvQlmFWljUJ1WQ4NJoYacpKzq60.bs27RvZk-1762071612-1.0.1.1-r21pnbfssT5sl0634j.MwtqMpoqZNkk8Ntni3CopcCw;ResearchGate
+222;https://revuesciences-techniquesburkina.org/index.php/sciences_naturelles_et_appliquee/article/download/990/990/4148;Sciences Naturelles et Appliquées
+223;https://www.researchgate.net/profile/Ouedraogo-Lassane/publication/374651906_Pesticides_and_Biopesticides_Use_in_Market_Gardening_in_Ouagadouou_Burkina_Faso/links/652d08957d0cf66a6732818f/Pesticides-and-Biopesticides-Use-in-Market-Gardening-in-Ouagadouou-Burkina-Faso.pdf?_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicGFnZSI6InB1YmxpY2F0aW9uIn19;ResearchGate
+224;https://www.researchgate.net/profile/Ouedraogo-Lassane/publication/374651906_Pesticides_and_Biopesticides_Use_in_Market_Gardening_in_Ouagadouou_Burkina_Faso/links/652d08957d0cf66a6732818f/Pesticides-and-Biopesticides-Use-in-Market-Gardening-in-Ouagadouou-Burkina-Faso.pdf?origin=publication_detail&_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicGFnZSI6InB1YmxpY2F0aW9uRG93bmxvYWQiLCJwcmV2aW91c1BhZ2UiOiJwdWJsaWNhdGlvbiJ9fQ&__cf_chl_tk=95fiji_2Sq_SXNnEZSjqo4s.fJwV1mrV21YAecWs5KA-1762068640-1.0.1.1-oHS9qk4e3UemAfa.3OgGwU5rZfcVH2zvCT00pHxD5hg;ResearchGate
+225;https://www.researchgate.net/profile/Louis-Looli-Boyombe/publication/350689521_Incidence_de_la_chenille_legionnaire_d%27automne_Spodoptera_frugiperda_JE_Smith_et_niveau_de_connaissance_de_ce_ravageur_par_les_agriculteurs_de_Kisangani_et_ses_environs_RD_Congo/links/606d894f92851c4f2686d4e9/Incidence-de-la-chenille-legionnaire-dautomne-Spodoptera-frugiperda-JE-Smith-et-niveau-de-connaissance-de-ce-ravageur-par-les-agriculteurs-de-Kisangani-et-ses-environs-RD-Congo.pdf?origin=publication_detail&_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicAFnZSI6InB1YmxpY2F0aW9uRG93bmxvYWQiLCJwcmV2aW91c1BhZ2UiOiJwdWJsaWNhdGlvbiJ9fQ&__cf_chl_tk=INAn8_tgJRLNyH.XTxtwHxuvXrdKGYVusbKLqkzzfOk-1762043802-1.0.1.1-sn3Xg.n2akAjn.KZxDBsTfyrg6_ReppbVOSpTuH0y2s;ResearchGate
+226;https://www.jica.go.jp/burkinafaso/french/activities/c8h0vm0000fhi9nb-att/activity04_03_03_01.pdf;JICA
+227;https://precel.bf/wp-content/plugins/download-attachments/includes/download.php?id=212;PRECEL Burkina
+228;https://www.sossahel.org/wp-content/uploads/2019/07/2019-06-27-TDR-BEOG-PUUTO-SUIVI-EVALUATION-IGMVSSdocx-rev-VF.pdf;SOS Sahel
+229;https://www.kit.nl/wp-content/uploads/2020/08/PAPSA_book_2020.pdf;KIT Royal Tropical Institute
+230;https://odi.org/documents/4606/9208.pdf;ODI
+231;https://riceforafrica.net/wp-content/uploads/2022/03/burkinafaso_nrds2_cn5.pdf;Africa Rice Center
+232;https://horizon.documentation.ird.fr/exl-doc/pleins_textes/doc34-05/41999.pdf;IRD
+233;https://www.jircas.go.jp/sites/default/files/publication/green/green-_-_27.pdf;JIRCAS
+234;https://www.ifad.org/documents/48415603/49455874/Burkina+Faso+2000001063+PAPFA+Supervision+Mission+September+-+October+2019.pdf/f7eb4d0b-8728-2bad-8444-3a4625d4babb?t=1726608713284;IFAD
+235;https://www.fao.org/fileadmin/templates/mafap/documents/Burkina_Faso/BURKINA_FASO_Country_Report_FR_July2013.pdf;FAO
+236;https://dgadibf.com/?wpdmpro=manuel-technique-damenagement-des-terres-suivant-le-mode-dirrigation-par-reseau-semi-californien-au-burkina-faso;DGADI Burkina
+237;https://www.equatorinitiative.org/wp-content/uploads/2017/05/case_1_1469737836.pdf;Equator Initiative
+238;https://www.inter-reseaux.org/wp-content/uploads/BDV_OP_9.pdf;Inter-réseaux
+239;https://orbi.uliege.be/bitstream/2268/241805/1/These_Kambou_Donkora_final.pdf;Université de Liège
+240;https://yam-pukri.org/IMG/pdf/format_livre_tic-agri_vf-numeriq_web.pdf;Yam Pukri
+241;https://www.researchgate.net/profile/Mathieu-Nama/publication/389273366_Caracterisation_de_la_culture_maraichere_dans_la_commune_rurale_de_Didyr_au_Burkina_Faso/links/67bc7d4b8311ce680c737b69/Caracterisation-de-la-culture-maraichere-dans-la-commune-rurale-de-Didyr-au-Burkina-Faso.pdf?_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicAFnZSI6InB1YmxpY2F0aW9uIn19;ResearchGate
+242;https://www.iram-fr.org/ouverturepdf.php?file=609.pdf;IRAM
+243;https://dial.uclouvain.be/pr/boreal/object/boreal%3A223998/datastream/PDF_01/view;Université Catholique de Louvain
+244;https://bibliocilss.pariis.net/files/original/a7c156ad6b4890c7db84e1ef04ba2d71101242d6.pdf;CILSS
+245;https://dial.uclouvain.be/pr/boreal/object/boreal%3A204694/datastream/PDF_01/view;Université Catholique de Louvain
+246;https://www.m.elewa.org/Journals/wp-content/uploads/2019/06/1.Garane-2.pdf;Elewa Journals
+247;https://www.m.elewa.org/Journals/wp-content/uploads/2024/06/2.Kouakou.pdf;Elewa Journals
+248;https://cnra.ci/wp-content/uploads/2021/12/13-Progr-MMS-2020-2023-VF.pdf;CNRA Côte d'Ivoire
+249;https://hal.science/hal-05021883/document;HAL Archives Ouvertes
+250;https://www.afdb.org/fileadmin/uploads/afdb/Documents/Events/DakAgri2015/Les_cultures_c%C3%A9r%C3%A9ali%C3%A8res_riz__ma%C3%AFs__millet__sorgho_et_bl%C3%A9.pdf;Banque Africaine de Développement
+251;https://revuesciences-techniquesburkina.org/index.php/lettres_sciences_sociales_et_hum/article/download/1376/1128/4731;Sciences Sociales et Humaines
+252;https://www.agrireseau.net/agroenvironnement/documents/feuillet4a.pdf;AgriRéseau
+253;https://burkinafaso.opendataforafrica.org/data/#topic=Prix;Open Data Burkina Faso
+254;https://burkinafaso.opendataforafrica.org/qdclnqb/evolution-des-prix-des-b%C3%A9liers-mossis-en-bon-%C3%A9tat;Open Data Burkina Faso
+255;https://burkinafaso.opendataforafrica.org/data/#;Open Data Burkina Faso
+256;https://burkinafaso.opendataforafrica.org/hxtvurc/prix-moyens-mensuels-%C3%A0-la-consommation-de-ma%C3%AFs-blanc-de-mil-sorgho-blanc-sorgho-rouge-et-du-riz-d%C3%A9co;Open Data Burkina Faso
+257;http://www.meteo-burkina.bf;Météo Burkina
+258;https://worldweather.wmo.int/fr/city.html?cityId=1526;OMM
+259;http://www.eaux-burkina.bf;DG-Eau Burkina
+260;https://www.africabizinfo.com/fr-BF/direction-generale-de-leau-potable-25-37-48-71;Africa Biz Info
+261;https://www.actea.org/wp-content/uploads/2022/07/Apercu-des-ressources-en-eau.pdf;ACTEA
+262;http://www.inera.bf;INERA
+263;https://www.agrisource.org/fr/7_108/5c332f0507c805cd14cf500f/Institut%20de%20l%E2%80%99Environnement%20et%20des%20Recherches%20Agricoles%20.html;Agrisource
+264;https://www.sustainsahel.net/fr/partenaires/inera-institut-de-lenvironment-et-de-recherches-agricoles-burkina-faso.html;SustainSahel
+265;https://www.sustainsahel.net/fr/zone.html;SustainSahel
+266;https://www.govserv.org/BF/Ouagadouga/549492125109378/INERA;GovServ
+267;https://www.sustainsahel.net/fr/impressum-fr.html;SustainSahel
+268;https://www.ewabelt.eu/institut-de-l-environnement?lang=fr;EWA-BELT
+269;http://www.agrhymet.ne;AGRHYMET
+270;http://www.eauburkina.bf;DG-Eau Burkina
+271;https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.mea.gov.bf%2Ffileadmin%2Fuser_upload%2Fstockage%2Fdocuments%2FAppel_a_contributions.docx&wdOrigin=BROWSELINK;MEA Burkina
+272;https://www.mea.gov.bf/fileadmin/user_upload/stockage/documents/communique.jpeg;MEA Burkina
+273;https://agrhymet.cilss.int/unites-du-centre-regional-agrhymet/;AGRHYMET
+274;https://mrv-burkina.bf/IMG/pdf/pna_finalise_vf_18_06_24_1_.pdf;MRV Burkina
+275;http://www.occ-bf.org;OCC Burkina
+276;https://www.insd.bf/fr/node/1783;INSD Burkina
+277;https://burkinafaso.opendataforafrica.org/jrwiqbd/acc%C3%A8s-aux-services;Open Data Burkina Faso
+278;https://burkinafaso.opendataforafrica.org/jtpdicb/disponibilit%C3%A9-et-utilisation-des-produits-agricoles;Open Data Burkina Faso
+279;http://www.pna-burkina.bf;PNA Burkina
+280;https://www4.unfccc.int/sites/NAPC/Documents/Parties/PNA_Version_version%20francaise%20finale%20BF.pdf;UNFCCC
+281;https://www.arc.int/gender-drmp/IMG/pdf/burkina-faso-national-adaptation-plan-french.pdf;ARC
+282;https://napglobalnetwork.org/wp-content/uploads/2023/08/napgn-fr-2023-plan-regional-adaptation-au-changement-climatique-2024-2028.pdf;NAP Global Network
+283;https://reliefweb.int/report/burkina-faso/plan-regional-dadaptation-au-changement-climatique-2024-2028;ReliefWeb
+284;https://naturama.bf/wp-content/uploads/2023/03/PNA-CHANGEMENT-SCLIMATIQUES.pdf;Naturama
+285;https://ca1-clm.edcdn.com/downloads/pas-pna_bf_-stocktaking_-_impact_des_cc_sur_l_conomie_et_secteurs.pdf?v=1689174520;Consultation Document
+286;https://fr.weatherspark.com/y/40160/M%C3%A9t%C3%A9o-moyenne-%C3%A0-Ouagadougou-Burkina-Faso-tout-au-long-de-l'ann%C3%A9e;Weather Spark
+287;https://meteoburkina.bf/meteo/;Météo Burkina
+288;https://www.tameteo.com/meteo_Ouagadougou-Afrique-Burkina+Faso-Ouagadougou-DFFD-1-8884.html;Tameteo
+289;https://www.allosurf.net/meteo/live/ouagadougou-mil-station-meteo-dffd-6100.html;Allosurf
+290;https://www.lachainemeteo.com/meteo-burkina-faso/ville-454/previsions-meteo-ouagadougou-heure-par-heure;La Chaîne Météo
+291;https://fr.climate-data.org/afrique/burkina-faso/centre/ouagadougou-512/;Climate-Data.org
+292;https://fr.climate-data.org/afrique/burkina-faso/centre/ouagadougou-512/t/janvier-1/;Climate-Data.org
+293;https://www.accuweather.com/fr/bf/ouagadougou/48097/weather-forecast/48097;AccuWeather
+294;https://fr.weatherspark.com/h/y/40160/2025/M%C3%A9t%C3%A9o-historique-en-2025-%C3%A0-Ouagadougou-Burkina-Faso;Weather Spark
+295;https://fr.weather-forecast.com/weather-stations/Bobo-Dioulasso-Airport;Weather-Forecast.com
+296;https://www.worldmeteo.info/fr/afrique/burkina-faso/bobo-dioulasso/meteo-197824/;World Meteo
+297;https://fr.weather-forecast.com/weather-stations/Ouahigouya;Weather-Forecast.com
+298;https://www.lachainemeteo.com/meteo-burkina-faso/ville-60771/previsions-meteo-ouahigouya-aujourdhui;La Chaîne Météo
+299;https://www.soilgrids.org;SoilGrids
+300;https://www.isric.org/projects/africa-soil-information-service-afsis;ISRIC
+301;http://www.fao.org/soils-portal;FAO
+302;https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v12;FAO
+303;https://africasoils.net;Africa Soils
+304;http://sols.burkina.bf;Sols Burkina
+305;https://mrv-burkina.bf/IMG/pdf/03_rapport_thematique_sols_version_finale_14_dec_2024.pdf;MRV Burkina
+306;https://hal.science/hal-04024449v1/file/Caract%C3%A9risation%20Morpho-p%C3%A9dologique%20et%20perception%20endogn%C3%A8e%20des%20sols%20%C3%A0%20Safan%C3%A9.pdf;HAL Archives Ouvertes
+307;https://agritrop.cirad.fr/510968/1/ID510968.pdf;CIRAD
+308;https://journals.openedition.org/vertigo/14616;VertigO
+309;http://cartes-sols.bf;Cartes Sols Burkina
+310;https://www.bunasol.bf/item/index3.php?item=etudes;BUNASOL
+311;https://www.bunasol.bf/item/index1.php?item=a-propos;BUNASOL
+312;https://bunasols.bf/index.php/2017-09-15-13-57-23/2017-09-15-14-01-51/2017-09-10-16-00-10;BUNASOL
+313;http://analyses-sols.bf;Analyses Sols Burkina
+314;https://www.researchgate.net/publication/333055669_Caracterisation_physico-chimique_des_sols;ResearchGate
+315;https://staff.univ-batna2.dz/sites/default/files/ghanem_nadra/files/tp_td_methodes_danalyses_des_sols.pdf;Université de Batna
+316;https://moodle.insa-toulouse.fr/file.php/301/content/mcyr/chapitre_1-proprietes_physiques_des_sols.pdf;INSA Toulouse
+317;http://www.meteo-burkina.bf;Agence Nationale de la Météorologie du Burkina
+318;http://www.eaux-burkina.bf;Direction Générale des Eaux et Barrages
+319;http://www.inera.bf;Institut de l'Environnement et de Recherches Agricoles
+320;http://www.agrhymet.ne;Centre Regional AGRHYMET
+321;http://www.eauburkina.bf;Ministère de l'Eau et de l'Assainissement
+322;http://www.occ-bf.org;Observatoire du Changement Climatique
+323;http://www.pna-burkina.bf;Programme National d'Adaptation aux CC
+324;http://data.meteo-ouaga.bf;Station Météo Ouagadougou
+325;https://fr.weatherspark.com/h/y/40160/2023/Météo-historique-en-2023-à-Ouagadougou-Burkina-Faso;WeatherSpark Ouagadougou
+326;http://data.meteo-bobo.bf;Station Météo Bobo-Dioulasso
+327;https://www.meteociel.fr/previsions/41803/bobo_dioulasso.htm;Meteociel Bobo-Dioulasso
+328;https://www.meteomedia.com/fr/aeroport/bf/-/bobo-dioulasso-airport/horaire;Meteomedia Bobo-Dioulasso
+329;http://data.meteo-ouahigouya.bf;Station Météo Ouahigouya
+330;https://meteostat.net/fr/station/65502?t=2025-10-20/2025-10-27#google_vignette;Meteostat Ouahigouya
+331;https://www.meteociel.fr/previsions/41776/ouahigouya.htm;Meteociel Ouahigouya
+332;https://fr.meteocast.in/forecast/bf/ouahigouya/;Meteocast Ouahigouya
+333;https://www.meteovoyage.com/meteo/burkina-faso/ouahigouya/;Meteovoyage Ouahigouya
+334;https://www.soilgrids.org;SoilGrids
+335;https://www.isric.org/projects/africa-soil-information-service-afsis;AfSIS Soil Data
+336;http://www.fao.org/soils-portal;FAO Soils Portal
+337;https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v12;Harmonized World Soil Database
+338;https://africasoils.net;African Soil Information Service
+339;http://sols.burkina.bf;Base de Données des Sols du Burkina
+340;https://www.fao.org/4/y3948f/y3948f10.htm;FAO Soil Resources
+341;http://cartes-sols.bf;Cartographie Pédologique Nationale
+342;http://analyses-sols.bf;Propriétés Physico-chimiques des Sols
+343;https://view.officeapps.live.com/op/view.aspx?src=http%3A%2F%2Ftele-ens.univ-oeb.dz%2Fmoodle%2Fpluginfile.php%2F365018%2Fmod_resource%2Fcontent%2F1%2FLes%2520analyses%2520%2520physico-chimiques%2520de%2520sol.pptx&wdOrigin=BROWSELINK;Analyse Physico-chimique des Sols PPT
+344;http://echangetv.levalentin.free.fr/Cours/Agronomie/cours_agro/C.Chapitre_1_Physique_Sol.pdf;Cours Physique du Sol PDF
+345;https://fr.scribd.com/document/818081231/Chapitre-2-Caracterisation-Des-Proprietes-Physico-chimiques-Du-Sol-Et-Sa-Classification;Caractérisation Propriétés Physico-chimiques Sol
+346;https://fac.umc.edu.dz/snv/faculte/tc/2019/Chapitre%20III.pdf;Chapitre III Caractéristiques Sols
+347;https://legeniecivil.com/caracteristiques-et-proprietes-physiques-d-un-sol-pdf/;Caractéristiques Physiques Sol PDF
+348;https://www.fao.org/soils-portal/soil-survey/classification-des-sols/systemes-numeriques/proprietes-chimiques/fr/;FAO Propriétés Chimiques Sols
+349;http://archive.univ-biskra.dz/moodle2020/pluginfile.php/315399/mod_resource/content/1/cours%20complet%20physique%20du%20sol.pdf;Cours Complet Physique du Sol
+350;http://reseau-sols.bf;Réseau de Surveillance des Sols
+351;https://www.gissol.fr/le-gis/programmes/rmqs-34;GIS Sol Programmes RMQS
+352;https://123dok.net/subject/réseau-de-surveillance-des-sols;Réseau Surveillance Sols Document
+353;https://hal.science/hal-00494011v2/document;Réseau Surveillance Sols HAL
+354;https://reseau-imagerie-sols.hub.inrae.fr/le-reseau/objectifs-et-organisation;Réseau Imagerie Sols INRAE
+355;https://www.gissol.fr/wp-content/uploads/2020/09/20ans_RMQS_Le_RMQS_Jolivet.pdf;Rapport RMQS Jolivet
+356;https://123dok.net/document/y6e1xpmo-les-programmes-de-surveillance-des-sols.html#google_vignette;Programmes Surveillance Sols
+357;https://www.afes.fr/wp-content/uploads/2025/06/Manuel-RMQS_V3_final_modifsjuin2024.pdf;Manuel RMQS V3
+358;https://www.afes.fr/wp-content/uploads/2023/10/JOLIVET.Claudy-JES2023-ORAL.pdf;Présentation RMQS JOLIVET
+359;https://123dok.net/document/q2n9or6q-mise-en-place-d-un-systeme-de-suivi-et-de-surveillance-de-la-qualite-des-eaux-souterraines-et-des-sols-dans-le-perimetre-irrigue-du-tadla-au-maroc.html;Système Surveillance Sols Maroc
+360;https://www.gissol.fr/donnees;GIS Sol Données
+361;https://www.ccafs.cgiar.org;Climate Change Agriculture
+362;https://www.cgiar.org/research/program-platform/climate-change-agriculture-and-food-security/;CGIAR Climate Change Program
+363;https://data.agrhymet.ne;AGRHYMET Data Portal
+364;https://agrhymet.cilss.int/presentation-du-centre-regional-agrhymet/;Présentation Centre AGRHYMET
+365;https://www4.unfccc.int/sites/nwpstaging/Pages/item.aspx?ListItemId=11702&ListUrl=/sites/NWPStaging/Lists/MainDB;UNFCCC AGRHYMET
+366;https://www.agriculture.gov.bf/ressources/textes-fondamentaux?tx_news_pi1%5Baction%5D=detail&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Bnews%5D=73&cHash=d8312216ac2616d07ef741ec94df0462;Agriculture BF Textes Fondamentaux
+367;https://www.agriculture.gov.bf/le-ministere/les-structures/details?tx_news_pi1%5Baction%5D=detail&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Bnews%5D=40&cHash=3db63831daba880846f3d0172e63dd82;Structures Agriculture BF
+368;https://www.agriculture.bf/les-structures/;Structures Agriculture
+369;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#1;Greenfacts Agriculture 1
+370;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#2;Greenfacts Agriculture 2
+371;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#3;Greenfacts Agriculture 3
+372;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#4;Greenfacts Agriculture 4
+373;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#5;Greenfacts Agriculture 5
+374;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#6;Greenfacts Agriculture 6
+375;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#7;Greenfacts Agriculture 7
+376;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#8;Greenfacts Agriculture 8
+377;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#9;Greenfacts Agriculture 9
+378;https://www.greenfacts.org/fr/agriculture-developpement/index.htm#10;Greenfacts Agriculture 10
+379;https://fews.net/west-africa/burkina-faso;FEWS NET Data
+380;https://fews.net/west-africa;FEWS NET West Africa
+381;https://fews.net/fr/west-africa/burkina-faso/mise-jour-du-message-cle/mai-2020;FEWS NET Burkina Message Clé
+382;https://fscluster.org/fr/burkina-faso/document/fewsnet-perspectives-sur-la-securite;FEWS NET Perspectives Sécurité
+383;https://fews.net/sites/default/files/documents/reports/BF_Food_Security_Outlook_June_2022_EN.pdf;FEWS NET Food Security Outlook
+384;http://www.dgre-burkina.bf;Direction Générale des Ressources en Eau
+385;https://www.mea.gov.bf/fileadmin/user_upload/stockage/documents/ORGANIGRAMME_DGRE.pdf;Organigramme DGRE
+386;https://dgre.gov.bf/lagence/a-propos/;À propos DGRE
+387;http://www.hydro-burkina.bf;Base de Données Hydrologiques
+388;https://dgre.gov.bf/documents/13/RAPPORT_FINAL_OPTIMISATION_RESEAUX_BF_25.04.2022_1_xb3Ydu8.pdf;Rapport Optimisation Réseaux BF
+389;https://earthwise.bgs.ac.uk/index.php/Hydrogéologie_du_Burkina_Faso;Hydrogéologie Burkina Faso
+390;https://archive.iwlearn.net/gefvolta.iwlearn.org/project-resources/studies-reports/data/data-final-burkina-faso/at_download/BURKINA%20DATA%20FINAL.pdf;Données Finales Burkina Faso
+391;https://www.pseau.org/outils/ouvrages/unicef_rvo_developpement_de_synthese_des_connaissances_geologiques_et_hydrogeologique_de_la_zone_nord_et_est_du_burkina_faso_2021.pdf;Connaissances Géologiques Burkina
+392;https://documents1.worldbank.org/curated/en/445991522099361916/pdf/Rapport-de-Synthese.pdf;Rapport de Synthèse Banque Mondiale
+393;https://dgre.gov.bf/note-de-suivi-de-la-qualité-des-eaux/annuaire-hydrologique/;Annuaire Hydrologique DGRE
+394;https://hal.science/hal-04695936/document;Document HAL Hydrologie
+395;https://journals.openedition.org/vertigo/39765;Vertigo Journal Hydrologie
+396;http://www.hydromet-burkina.bf;Stations Hydrométriques
+397;https://meteoburkina.bf/stations/;Stations Météo Burkina
+398;https://www.floodmanagement.info/floodmanagement/wp-content/uploads/2021/02/Rapport_National_SAP_BurkinaFaso_reviewCIMA_final04_01_2021.pdf;Rapport National SAP Burkina
+399;https://www.memoireonline.com/08/09/2607/Suivi-des-Ressources-en-Eau-des-Bassins-Versants-du-Burkina-Faso-Aout-2008.html;Mémoire Suivi Ressources Eau
+400;https://documents1.worldbank.org/curated/en/099062524164027817/pdf/P1640781ed1eba0b41b0a719a6498063525.pdf;Rapport Banque Mondiale Eau
+401;http://www.qualite-eaux-burkina.bf;Qualité des Eaux
+402;https://www.transports.gov.bf/fileadmin/user_upload/Rapport_NIES_Po.pdf;Rapport NIES Po
+403;https://lefaso.net/spip.php?article132314;Article Qualité Eaux
+404;http://www.bassins-versants-bf.bf;Gestion des Bassins Versants
+405;https://www.pseau.org/outils/ouvrages/dgre_les_agences_de_l_eau_au_burkina_faso_capitalisation_du_processus_de_mise_en_place_2013.pdf;Capitalisation Agences Eau Burkina
+406;https://www.fao.org/4/a1295f/a1295f00.pdf;FAO Gestion Bassins Versants
+407;https://dgre.gov.bf/documents/9/Document_synthèse_du_suivi_des_ressources_en_eau_de_2016_VF.pdf;Document Synthèse Ressources Eau 2016
+408;https://www.gwp.org/fr/GWP-Afrique-Ouest/GWP-in-Action/News--Activities/gestion-transfrontiere-des-eaux-le-burkina-vers-une-adhesion-a-la-convention-sur-leau/;GWP Gestion Transfrontière Eaux
+409;https://www.floodmanagement.info/floodmanagement/wp-content/uploads/2021/08/VFDM-1236-Draft-Orientations-generales-Juillet-2021-French.pdf;Orientations Gestion Inondations
+410;https://rsis.ramsar.org/RISapp/files/39534933/documents/BF2253_lit1601.pdf;RAMSAR Burkina Faso
+411;https://eaunakanbe.bf/wp-content/uploads/2019/06/Rapport-etat-des-lieux-des-RE-du-Nakanbé-de-2010-Final.pdf;Rapport État Lieux Nakanbé
+412;https://hal.science/hal-04680442v1/document;Document HAL Bassins Versants
+413;http://www.eaux-souterraines.bf;Ressources en Eau Souterraines
+414;https://documents1.worldbank.org/curated/en/125061522099341105/pdf/Annexe-1.pdf;Annexe Eaux Souterraines Banque Mondiale
+415;https://www.actea.org/wp-content/uploads/2022/08/Synthese_atelier-eaux-souterraines_juin-2022_.pdf;Synthese Atelier Eaux Souterraines
+416;https://dgre.gov.bf/services/gestion-des-eaux-souterraines/;Gestion Eaux Souterraines DGRE
+417;https://eaugourma.bf/wp-content/uploads/2020/09/eta_des_lieux_des_ressources_en_eau_du_burkina.pdf;État Lieux Ressources Eau Burkina
+418;https://www.persee.fr/doc/tlgpa_0249-647x_2003_num_22_1_1010;Article Persée Eaux Souterraines
+419;https://hal.science/tel-05201940v1;Thèse Eaux Souterraines
+420;https://www.fao.org/fileadmin/user_upload/groundwatergovernance/docs/Nairobi/Presentations/PS2_9.8_Nindaoua_Savadogo.pdf;Présentation FAO Eaux Souterraines
+421;http://www.barrages-burkina.bf;Barrages et Retenues
+422;https://www.mea.gov.bf/fileadmin/user_upload/stockage/documents/Document_Cadre_Entretien_et_Securite_des_Barrages_au_BF_version_Finale.pdf;Document Cadre Barrages BF
+423;https://dgre.gov.bf/documents/4/Rapport_inventaire_retenues_eau_ok_CE.pdf;Rapport Inventaire Retenues Eau
+424;https://rsis.ramsar.org/RISapp/files/RISrep/BF1874RISformer_160725.pdf;RAMSAR Barrage BF
+425;https://eaugourma.bf/la-protection-des-ressources-en-eau-par-la-delimitation-des-perimetres-de-protection-lexperience-de-lagence-de-leau-du-gourma/;Protection Ressources Eau Gourma
+426;https://lefaso.net/spip.php?article111650;Article Barrages Faso
+427;https://journals.openedition.org/anthropodev/1662;Article Anthropologie Développement Barrages
+428;https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fdsse2019.sciencesconf.org%2Fdata%2Fpages%2FSanou_POSTER_DSSE2019.docx&wdOrigin=BROWSELINK;Poster DSSE Barrages
+429;https://dgre.gov.bf/note-de-suivi-de-la-qualité-des-eaux/inventaire-national-des-retenues-deau/inventaire-national-des-retenues-deau/;Inventaire Retenues Eau DGRE
+430;http://www.irrigation-burkina.bf;Irrigation et Drainage
+431;https://orbi.uliege.be/bitstream/2268/241805/1/These_Kambou_Donkora_final.pdf;Thèse Irrigation Kambou
+432;https://www.persee.fr/doc/tigr_0048-7163_1993_num_83_1_1617;Article Persée Irrigation
+433;https://openknowledge.fao.org/server/api/core/bitstreams/b204f9a6-8418-4621-80ca-ccb7075e4648/content;FAO Irrigation
+434;https://agritrop.cirad.fr/579115/;CIRAD Irrigation
+435;https://www.sidwaya.info/carrefour/2020/12/29/irrigation-par-micro-aspersion-vers-une-revolution-de-lagriculture-burkinabe/;Article Irrigation Micro-aspersion
+436;http://www.bilans-hydriques.bf;Bilans Hydriques
+437;https://fac.umc.edu.dz/fst/fichiers/LE%20BILAN%20%20HYDRIQUE.pdf;Cours Bilan Hydrique
+438;https://www.aquaportail.com/dictionnaire/definition/4407/bilan-hydrique;Définition Bilan Hydrique
+439;https://weenat.com/bilan-hydrique-pilotage-irrigation/;Weenat Bilan Hydrique
+440;https://www.institut-rhodanien.com/upload/article/file/001stresshydriquelireunbilanhydrique1-65bcf52c5c658.pdf;Stress Hydrique Bilan Hydrique
+441;https://www.studysmarter.fr/resumes/geographie/cycle-de-leau/bilans-hydriques/;StudySmarter Bilans Hydriques
+442;https://thierrycastel.github.io/tcastel/assets/bilanhydrique.pdf;Bilan Hydrique Thierry Castel
+443;https://www.brl.fr/phototheque/photos/pdf/Memento-fiche5.pdf;Memento BRL Bilan Hydrique
+444;http://documentation.2ie-edu.org/cdi2ie/opac_css/doc_num.php?explnum_id=3805;Document 2iE Bilan Hydrique
+445;http://www.eaux-usees-agricoles.bf;Eaux Usées Agricoles
+446;https://staff.univ-batna2.dz/sites/default/files/athamena_ali/files/chapitre_vi_les_eaux_usees_agricoles.pdf;Cours Eaux Usées Agricoles
+447;https://lhl.fr/blog/traitement-des-eaux-usees-agricoles-approche-exhaustive-des-technologies-actuelles-et-emergentes/;Traitement Eaux Usées Agricoles
+448;https://fr.wikipedia.org/wiki/Traitement_des_eaux_usées_agricoles;Wikipedia Traitement Eaux Usées Agricoles
+449;https://afwasakm.afwasa.org/wp-content/uploads/2019/05/DIRECTIVES-OMS-POUR-L%27UTILISATION-SANS-RISQUE.pdf;Directives OMS Eaux Usées
+450;https://www.pseau.org/outils/ouvrages/dga_document_cadre_de_gestion_de_la_filiere_assainissement_des_eaux_usees_et_excreta_au_burkina_faso_2022_2026_2022.pdf;Document Cadre Assainissement Burkina
+451;http://documentation.2ie-edu.org/cdi2ie/opac_css/doc_num.php?explnum_id=4291;Document 2iE Eaux Usées
+452;https://idl-bnc-idrc.dspacedirect.org/server/api/core/bitstreams/0f0ce2fa-c2bc-49bf-a609-035d04bf637f/content;IDRC Eaux Usées
+453;https://www.susana.org/_resources/documents/default/2-2012-guide-reuonepversion1.pdf;Guide Réutilisation Eaux Usées
+454;https://earthexplorer.usgs.gov;USGS EarthExplorer
+455;https://earthexplorer.usgs.gov/dataset/categories;USGS Dataset Categories
+456;https://www.usgs.gov/educational-resources/earth-explorer;USGS Educational Resources
+457;https://glads.umd.edu;GLADS Data
+458;https://geog.umd.edu/featured-content/umd-glad-produces-data-global-forests-report-featured-new-york-times-bbc;UMD GLAD Global Forests
+459;https://geog.umd.edu/featured-content/new-data-umd-glad-shows-forest-fires-are-worsening;UMD GLAD Forest Fires
+460;https://www.servirglobal.net;SERVIR Global
+461;https://www.servirglobal.net/;SERVIR Global Accueil
+462;https://www.servirglobal.net/what/;SERVIR Global What
+463;https://www.servirglobal.net/team/;SERVIR Global Team
+464;https://tkms.servirglobal.net/training/;SERVIR Global Training
+465;http://www.pheno-burkina.bf;Réseau d'Observation Phénologique
+466;https://www.inrae.fr/actualites/plantes-au-rythme-saisons-guide-dobservation-phenologique-plantes;INRAE Observation Phénologique
+467;https://tempo.pheno.fr/content/download/4101/39140?version=1;Tempo Pheno Guide 1
+468;https://tempo.pheno.fr/content/download/4001/38690?version=1;Tempo Pheno Guide 2
+469;https://www.oecd.org/agriculture;OCDE - Statistiques Agricoles
+470;https://www.oecd.org/content/dam/oecd/fr/publications/reports/2023/07/oecd-fao-agricultural-outlook-2023-2032_859ba0c2/a187ca6c-fr.pdf;OCDE-FAO Agricultural Outlook 2023
+471;https://www.oecd.org/fr/publications/politiques-agricoles-suivi-et-evaluation-2020_10578a8d-fr.html;OCDE Politiques Agricoles 2020
+472;https://openknowledge.fao.org/server/api/core/bitstreams/fdbf1d20-4af5-4c6b-ab13-a21cdeeb43cf/content;FAO Agricultural Outlook
+473;https://www.inter-reseaux.org/wp-content/uploads/Perspectives_Agricoles_OCDE-FAO.pdf;Perspectives Agricoles OCDE-FAO
+474;https://www.oecd.org/fr/publications/2025/07/oecd-fao-agricultural-outlook-2025-2034_3eb15914.html;OCDE-FAO Agricultural Outlook 2025
+475;https://www.oecd.org/fr/publications/politiques-agricoles-suivi-et-evaluation-2025-version-abregee_0cec016c-fr/full-report/developments-in-agricultural-policies-and-support-by-country_411a0245.html;OCDE Politiques Agricoles par Pays
+476;https://www.oecd.org/fr/publications/politiques-agricoles-suivi-et-evaluation-2025-version-abregee_0cec016c-fr/full-report/overview-of-agricultural-policies-and-support_68470b91.html;OCDE Aperçu Politiques Agricoles
+477;https://www.oecd.org/fr/publications/2025/07/oecd-fao-agricultural-outlook-2025-2034_3eb15914/full-report/agricultural-and-food-markets-trends-and-prospects_d3812d71.html;OCDE Marchés Agricoles Tendances
+478;http://www.marche-ouaga.bf;Marché de Ouagadougou
+479;https://books.openedition.org/irdeditions/904?lang=fr;Édition IRD Marché Ouaga
+480;https://beep.ird.fr/collect/depgeo/index/assoc/BAGADR93/BAGADR93.pdf;PDF Marché Ouagadougou
+481;https://fr.wikipedia.org/wiki/Rood_Wooko;Wikipedia Rood Wooko
+482;https://lefaso.net/spip.php?article96310;Article Faso Marché Ouaga
+483;https://files.core.ac.uk/download/pdf/15526098.pdf;PDF Core Marché Ouaga
+484;https://dgi.bf/grand-marche-de-ouagadougou-la-dgi-y-deploie-son-personnel-de-recouvrement/;DGI Grand Marché Ouaga
+485;https://www.wakatsera.com/ouagadougou-le-grand-marche-et-des-commerces-dans-le-centre-;Wakatsera Marché Ouaga
+486;http://sols.burkina.bf;Sols Burkina
+487;http://cartes-sols.bf;Cartes Sols Burkina
+488;http://analyses-sols.bf;Analyses Sols Burkina
+489;http://cns.bf/IMG/pdf/sonagess_annuaire_des_prix_des_produits_agricoles_2022.pdf;CNS Burkina
+490;https://files.core.ac.uk/download/pdf/59355671.pdf;Core AC UK
+491;https://ageconsearch.umn.edu/record/270986/files/idwp159.pdf;University of Minnesota
+492;https://openknowledge.fao.org/server/api/core/bitstreams/01738e0b-25fc-4a41-8dfb-38afc03ab88a/content;FAO
+493;https://openknowledge.fao.org/server/api/core/bitstreams/9686c175-ac1c-49fe-84b4-d4223acccd35/content;FAO
+494;https://openknowledge.fao.org/server/api/core/bitstreams/6d8f98d7-7ad6-4348-ad11-8fcca0e3decb/content;FAO
+495;https://openknowledge.fao.org/server/api/core/bitstreams/e68f6a40-03a1-4047-823b-8c62bc979156/content;FAO
+496;https://openknowledge.fao.org/server/api/core/bitstreams/cb056acd-6ea3-4e48-b1be-5a64ecbbe884/content;FAO
+497;https://openknowledge.fao.org/server/api/core/bitstreams/cad6dc69-f105-47f7-a3b9-f9e5823671c8/content;FAO
+498;https://popups.uliege.be/1780-4507/index.php?id=17321&file=1&pid=1235;Universit� de Li�ge
+499;https://journal.uts.bf/index.php/cedres/article/view/94/88;CEDRES Journal
+500;https://journal.uts.bf/index.php/cedres/article/view/107/96;CEDRES Journal
+501;https://journal.uts.bf/index.php/cedres/article/view/139/130;CEDRES Journal
+502;https://www.cabidigitallibrary.org/doi/pdf/10.5555/20073012752;CABI
+503;https://pugoma.com/index.php/UNIGOM/article/view/146/103;PUGOMA

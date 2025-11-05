@@ -114,8 +114,8 @@ def clean_existing_corpus(input_path, output_path):
             logger.info(f"  " + "-"*50)
 
 def main():
-    input_corpus = "./data/corpus.json"
-    output_corpus = "./data/corpus1.json"
+    input_corpus = "./data/corpus_dearty.json"
+    output_corpus = "./data/corpus.json"
     
     clean_existing_corpus(input_corpus, output_corpus)
     logger.info(f"✓ Corpus nettoyé sauvegardé dans: {output_corpus}")

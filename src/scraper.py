@@ -19,6 +19,9 @@ import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import nltk
 import io
+import clean_corpus
+import embeddings
+
 
 # Configuration du logging sans emojis
 logging.basicConfig(
@@ -964,9 +967,9 @@ def main():
     """Fonction principale"""
     # Configuration
     OUTPUT_FOLDER = "./data/processed"
-    CSV_INPUT = "./data/source2.csv"  # Fichier CSV avec URLs à traiter
-    SOURCES_CSV = "./data/source2.csv"  # Fichier CSV avec mapping des sources
-    CORPUS_OUTPUT = "./data/corpus.json"
+    CSV_INPUT = "./data/sources.csv"  # Fichier CSV avec URLs à traiter
+    SOURCES_CSV = "./data/sources.csv"  # Fichier CSV avec mapping des sources
+    CORPUS_OUTPUT = "./data/corpus_dearty.json"
     
     # Création dossiers
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
@@ -1014,6 +1017,17 @@ def main():
             logger.info(f"  - {method}: {count} chunks")
     else:
         logger.warning("Aucun chunk cree, corpus non sauvegarde")
+    
+    #nettoyage
+    input_corpus = "./data/corpus_dearty.json"
+    output_corpus = "./data/corpus.json"
+    
+    clean_corpus.clean_existing_corpus(input_corpus, output_corpus)
+    logger.info(f"✓ Corpus nettoyé sauvegardé dans: {output_corpus}")
+
 
 if __name__ == "__main__":
     main()
+    
+    #lancer l'embeddings
+    embeddings.main()
