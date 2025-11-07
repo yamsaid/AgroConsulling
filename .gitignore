@@ -1,28 +1,111 @@
-.gitignore
-agrivenv
-.vscode
-others
-data/corpus_tes.json
-src/__pycache__
-script
-data/*_*
-data/chroma_*
-data/benchmark_*
-data/processed
-data/faiss_*
-data/embeddings.npy
-data/*_test
-data/faiss_index.index
-evaluation/test_api1.py
-frontend/__pycache__
-.env
-embedding_pipeline.log
-api/__pycache__
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+agrivenv/
 .venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+
+# Logs
 *.log
-*.csv
-embeddings.txt
-*.zip
-fix_index.py
-test_request.json
-*.png
+logs/
+api_server.log
+scraper.log
+embedding_pipeline.log
+vector_store.log
+
+# Data (sauf fichiers essentiels)
+data/processed/
+data/temp_downloads/
+data/*.csv
+
+!data/*.txt
+!data/corpus.json
+data/embeddings.npy
+!data/faiss_db/
+data/corpus_dearty.json
+
+
+# ChromaDB
+data/chroma_db/*.sqlite3
+data/chroma_db
+
+
+# FAISS (garder les fichiers d'index mais ignorer les temporaires)
+data/faiss_db/*.tmp
+
+# Hugging Face
+.huggingface/
+hf_cache/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Model files (trop gros pour git)
+*.bin
+*.safetensors
+models/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# pytest
+.pytest_cache/
+
+# Scripts
+scripts/
+
+# src
+src/data_loader.py
+
+=0.16.0
+*.md
+!README.md
+
+requirements_hf.txt
