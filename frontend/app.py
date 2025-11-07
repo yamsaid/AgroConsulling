@@ -4,16 +4,24 @@ import json
 from datetime import datetime
 import logging
 from typing import Tuple
-import time
+from urllib.parse import urlparse
+import sys
 
 # ==================== CONFIGURATION ==================== #
 
-TITRE = "AgroConsolling - Chat RAG Agricole"
+TITRE = "AgroConsulling - Chat RAG Agricole"
 API_BASE_URL = "http://localhost:8000"
-API_TIMEOUT = 60
+API_TIMEOUT = 600
 
 # Configuration logging
-logging.basicConfig(level=logging.INFO)
+
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[logging.StreamHandler(sys.stdout)],
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+sys.stdout.reconfigure(encoding='utf-8')
+
 logger = logging.getLogger(__name__)
 
 CSS_CUSTOM = """
@@ -43,14 +51,17 @@ html, body {
     overflow: hidden;
 }
 
+/* ===== SIDEBAR ===== */
 .sidebar {
-    width: 260px;
+    width: 500px;
     background: linear-gradient(135deg, #2d5016 0%, #558b2f 100%);
     color: white;
-    padding: 20px;
+    padding: 30px 20px;
     overflow-y: auto;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     flex-shrink: 0;
+    min-height: 100vh;
+    height: 100%;
 }
 
 .sidebar-title {
@@ -81,27 +92,45 @@ html, body {
     box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
 }
 
-.status-indicator {
+/* ===== HISTORIQUE ===== */
+.history-list {
+    margin-top: 10px;
+}
+
+.history-item {
     padding: 12px;
-    border-radius: 8px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.history-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.history-item.active {
+    background: rgba(251, 192, 45, 0.2);
+    border-left: 3px solid var(--accent-yellow);
+}
+
+.history-title {
     font-size: 0.9em;
-    margin-bottom: 15px;
-    text-align: center;
-    border-left: 4px solid;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.status-healthy {
-    background: #e8f5e9;
-    border-left-color: #558b2f;
-    color: #2d5016;
+.history-date {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.6);
 }
 
-.status-error {
-    background: #ffebee;
-    border-left-color: #c62828;
-    color: #c62828;
-}
-
+/* ===== ZONE PRINCIPALE ===== */
 .main-content {
     flex: 1;
     display: flex;
@@ -127,6 +156,7 @@ html, body {
     font-weight: bold;
 }
 
+/* ===== CHAT ===== */
 .chat-messages {
     flex: 1;
     overflow-y: auto;
@@ -145,23 +175,12 @@ html, body {
 }
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
 }
 
-.message.user {
-    justify-content: flex-end;
-}
-
-.message.assistant {
-    justify-content: flex-start;
-}
+.message.user { justify-content: flex-end; }
+.message.assistant { justify-content: flex-start; }
 
 .message-content {
     max-width: 75%;
@@ -184,6 +203,7 @@ html, body {
     border: 1px solid #e0e0e0;
 }
 
+/* ===== SOURCES ===== */
 .sources-container {
     background: #f5f5f5;
     border-left: 4px solid #558b2f;
@@ -234,114 +254,65 @@ html, body {
     border-radius: 4px;
 }
 
-.loading-spinner {
-    display: inline-block;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.error-message {
-    background: #ffebee;
-    border-left: 4px solid #c62828;
-    color: #c62828;
-    padding: 12px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-.success-message {
-    background: #e8f5e9;
-    border-left: 4px solid #558b2f;
-    color: #2d5016;
-    padding: 12px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-.input-area {
-    padding: 15px;
+/* ===== CHAMP DE SAISIE ===== */
+#input-zone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 15px 0;
     background: white;
     border-top: 1px solid #e0e0e0;
-    flex-shrink: 0;
+}
+
+.input-wrapper {
     display: flex;
-    align-items: flex-end;
-    gap: 10px;
-    min-height: auto;
+    align-items: stretch;
+    width: 95%;         /* prend presque toute la largeur */
+    max-width: 1200px;  /* plus large sur grand écran */
+    min-width: 600px;   /* plus large sur petit écran */
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
 }
 
-.input-field {
-    flex: 1;
-    padding: 12px;
-    border: 2px solid #c5e1a5;
-    border-radius: 8px;
-    font-size: 0.95em;
-    transition: all 0.3s ease;
-    resize: vertical;
-    max-height: 120px;
-    min-height: 45px;
+.input-field textarea {
+    border: none !important;
+    padding: 14px 18px !important;
+    font-size: 1rem !important;
+    width: 100% !important;  /* prend tout l'espace restant */
+    resize: none !important;
+    min-height: 50px !important;
 }
 
-.input-field:focus {
-    outline: none;
-    border-color: #558b2f;
-    box-shadow: 0 0 0 3px rgba(85, 139, 47, 0.1);
-}
 
 .btn-send {
-    padding: 12px 20px;
     background: linear-gradient(135deg, #2d5016 0%, #558b2f 100%);
     color: white;
     border: none;
-    border-radius: 8px;
+    font-size: 20px;
+    padding: 0 20px;
     cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    font-size: 0.8em;
     display: flex;
     align-items: center;
     justify-content: center;
-    white-space: nowrap;
-    flex-shrink: 0;
-    height: 45px;
 }
 
-.btn-send:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+.btn-send:hover {
+    background: #33691e;
 }
 
-.btn-send:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #999;
-    text-align: center;
-}
-
-.empty-state-icon {
-    font-size: 4em;
-    margin-bottom: 20px;
-}
-
-.empty-state-text {
-    font-size: 1.1em;
-    color: #666;
+/* ===== FOOTER ===== */
+footer, .svelte-1ipelgc, .svelte-1y4p8pa {
+    display: none !important;
+    visibility: hidden !important;
 }
 """
 
-JS_SCROLL = """
+JS_CUSTOM = """
 <script>
+// Fonction de défilement vers le bas du chat
 function scrollToBottom() {
     const chatBox = document.querySelector('[id*="chat-display"]');
     if (chatBox) {
@@ -350,356 +321,304 @@ function scrollToBottom() {
         }, 100);
     }
 }
-window.addEventListener('load', scrollToBottom);
+
+// Gestion des clics sur l'historique
+function setupHistoryClickHandlers() {
+    document.querySelectorAll('.history-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const convId = this.id.split('-')[1];
+            const btnId = `button#conv-btn-${convId}`;
+            const btn = document.querySelector(btnId);
+            if (btn) btn.click();
+        });
+    });
+}
+
+// Configuration initiale
+window.addEventListener('load', () => {
+    scrollToBottom();
+    setupHistoryClickHandlers();
+});
+
+// Observer pour les mises à jour dynamiques
+const observer = new MutationObserver(() => {
+    setupHistoryClickHandlers();
+});
+
+// Démarrer l'observation des changements dans le DOM
+window.addEventListener('load', () => {
+    const historyList = document.querySelector('.history-list');
+    if (historyList) {
+        observer.observe(historyList, { 
+            childList: true, 
+            subtree: true 
+        });
+    }
+});
 </script>
 """
 
+# ==================== GESTION DE L'HISTORIQUE ==================== #
+
+
+class ConversationManager:
+    def __init__(self):
+        self.conversations = []
+        self.current_id = None
+
+    def create_conversation(self) -> dict:
+        conversation = {
+            "id": len(self.conversations),
+            "title": "Nouvelle conversation",
+            "date": datetime.now().strftime("%d/%m/%Y %H:%M"),
+            "messages": [],
+        }
+        self.conversations.append(conversation)
+        self.current_id = conversation["id"]
+        return conversation
+
+    def add_message(self, message: str, response: dict):
+        if not self.conversations or self.current_id is None:
+            self.create_conversation()
+
+        current_conv = self.conversations[self.current_id]
+        current_conv["messages"].append({"role": "user", "content": message})
+        current_conv["messages"].append({"role": "assistant", "content": response})
+
+        # Mettre à jour le titre avec la première question si c'est la première
+        if len(current_conv["messages"]) == 2:
+            # Nettoyer le titre pour gr.Radio (pas de retour à la ligne, pas de HTML)
+            clean_title = message.replace("\n", " ").replace("\r", " ")
+            clean_title = (
+                clean_title[:30] + "..." if len(clean_title) > 30 else clean_title
+            )
+            current_conv["title"] = clean_title
+
+    def get_conversation(self, conv_id: int) -> dict:
+        return (
+            self.conversations[conv_id]
+            if 0 <= conv_id < len(self.conversations)
+            else None
+        )
+
+    def get_all_conversations(self) -> list:
+        return self.conversations
+
+    def build_history_html(self) -> str:
+        if not self.conversations:
+            return '<div class="history-list">Aucune conversation</div>'
+
+        html = '<div class="history-list">'
+        for conv in reversed(self.conversations):  # Plus récent en premier
+            active_class = "active" if conv["id"] == self.current_id else ""
+            html += f"""
+            <div class="history-item {active_class}" id="history-{conv["id"]}">
+                <div class="history-title">{conv["title"]}</div>
+                <div class="history-date">{conv["date"]}</div>
+            </div>
+            """
+        html += "</div>"
+        return html
+
+
+conversation_manager = ConversationManager()
+
 # ==================== CLASSE API CLIENT ==================== #
 
+
 class AgroConsollingAPIClient:
-    """Client pour l'API RAG Agricole"""
-    
     def __init__(self, api_url: str = API_BASE_URL, timeout: int = API_TIMEOUT):
         self.api_url = api_url
         self.timeout = timeout
-    
-    def check_health(self) -> Tuple[bool, str]:
-        """Vérifie l'état du backend API"""
-        try:
-            response = requests.get(
-                f"{self.api_url}/health",
-                timeout=5
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                status = data.get("status", "unknown")
-                
-                if status == "healthy" or status == "degraded":
-                    components = data.get("components", {})
-                    llm_status = components.get("llm_handler", {}).get("status", "unknown")
-                    if status == "healthy":
-                        return True, f"✅ Système prêt (LLM: {llm_status})"
-                    else:
-                        return True, f"⚠️ Mode dégradé mais fonctionnel"
-                else:
-                    return False, f"❌ Statut: {status}"
-            else:
-                return False, f"❌ HTTP {response.status_code}"
-                
-        except requests.exceptions.ConnectionError:
-            return False, "❌ Impossible de se connecter à l'API (vérifiez port 8000)"
-        except requests.exceptions.Timeout:
-            return False, "❌ Timeout API"
-        except Exception as e:
-            return False, f"❌ Erreur: {str(e)[:50]}"
-    
+
     def ask_question(
-        self,
-        question: str,
-        max_results: int = 3,
-        template: str = "standard"
+        self, question: str, max_results: int = 3, template: str = "standard"
     ) -> dict:
-        """Envoie une question à l'API"""
         try:
             payload = {
                 "question": question,
                 "max_results": max_results,
                 "template": template,
-                "verbose": False
+                "verbose": False,
             }
-            
             response = requests.post(
-                f"{self.api_url}/ask",
-                json=payload,
-                timeout=self.timeout
+                f"{self.api_url}/ask", json=payload, timeout=self.timeout
             )
-            
             if response.status_code == 200:
                 return response.json()
             else:
                 return {
                     "success": False,
                     "error": f"HTTP {response.status_code}",
-                    "details": response.text[:200]
+                    "details": response.text[:200],
                 }
-                
-        except requests.exceptions.Timeout:
-            return {
-                "success": False,
-                "error": "Timeout",
-                "details": "Réponse > 60s. Le modèle LLM peut être lent."
-            }
-        except requests.exceptions.ConnectionError:
-            return {
-                "success": False,
-                "error": "Connexion échouée",
-                "details": f"Impossible de joindre {self.api_url}"
-            }
         except Exception as e:
-            return {
-                "success": False,
-                "error": "Erreur",
-                "details": str(e)[:100]
-            }
+            return {"success": False, "error": "Erreur", "details": str(e)[:100]}
 
-# ==================== CLIENT GLOBAL ==================== #
 
 api_client = AgroConsollingAPIClient()
 
-# ==================== FONCTIONS DE TRAITEMENT ==================== #
+# ==================== TRAITEMENT DU CHAT ==================== #
+
 
 def format_response_with_sources(api_response: dict) -> str:
-    """Formate la réponse avec sources et métadonnées"""
-    
     if not api_response.get("success", False):
-        error = api_response.get("error", "Erreur inconnue")
-        details = api_response.get("details", "")
-        return f"""<div class="error-message">
-            <strong>❌ Erreur:</strong> {error}<br/>
-            <small>{details}</small>
-        </div>"""
-    
+        return f"""<div class=\"error-message\"><strong>❌ Erreur:</strong> {api_response.get("error", "Erreur inconnue")}<br/><small>{api_response.get("details", "")}</small></div>"""
+
     # Réponse principale
-    html = f"""<div class="message-content assistant-message" style="background: #e8f5e9; border-left: 4px solid #558b2f; padding: 15px; border-radius: 8px;">
-        {api_response.get('reponse', 'Aucune réponse')}
-    </div>"""
-    
-    # Sources
+    html = f"""<div class="message-content assistant-message" 
+                style="background: #e8f5e9; border-left: 4px solid #558b2f; padding: 15px; border-radius: 8px;">
+                {api_response.get("reponse", "Aucune réponse disponible.")}
+            </div>"""
+
+    # ======= Affichage des sources =======
     sources = api_response.get("sources", [])
     if sources:
-        html += """<div class="sources-container">
-            <strong>📚 Sources utilisées:</strong>"""
-        
+        html += '<div class="sources-container"><strong>📚 Sources utilisées :</strong>'
         for i, source in enumerate(sources, 1):
-            pertinence = source.get("pertinence", 0)
-            titre = source.get("titre", "Inconnue")
-            organisme = source.get("organisme", "N/A")
-            bar_width = int(pertinence * 100)
-            
+            texte = source.get("text", "").strip()
+            url = source.get("source_url", "#")
+            nom_fichier = source.get("source", "").replace(".pdf", "").strip()
+            nom_site = urlparse(url).netloc or "Lien inconnu"
+
             html += f"""
             <div class="source-item">
-                <div class="source-title">{i}. {titre}</div>
-                <div class="source-org">{organisme}</div>
-                <div class="pertinence-bar">
-                    <div class="pertinence-fill" style="width: {bar_width}%"></div>
+                <div class="source-title">🔗 Source {i} : 
+                    <a href="{url}" target="_blank" style="color:#2d5016;text-decoration:none;">{nom_site}</a>
                 </div>
-                <small>Pertinence: {pertinence:.0%}</small>
+                <div class="source-org">{nom_fichier}</div>
+                <div class="source-text">{texte}</div>
             </div>"""
-        
         html += "</div>"
-    
-    # Métadonnées
-    metadata = api_response.get("metadata", {})
-    if metadata:
-        gen_time = metadata.get("generation_time", 0)
-        tokens = metadata.get("tokens_generated", 0)
-        proc_time = metadata.get("processing_time", 0)
-        model = metadata.get("model", "Unknown")
-        docs = metadata.get("documents_used", 0)
-        
-        html += f"""<div class="metadata-info">
-            ⏱️ {proc_time:.2f}s | 🤖 {model} | 📊 {tokens} tokens | 📄 {docs} doc
-        </div>"""
-    
     return html
 
-def process_chat_message(message: str, history: list, api_available: bool) -> Tuple[str, list, str]:
-    """Traite un message utilisateur"""
-    
-    if not message or not message.strip():
+
+def process_chat_message(message: str, history: list) -> Tuple[str, list, str]:
+    if not message.strip():
         return "", history, ""
-    
-    if not api_available:
-        error_html = """<div class="error-message">
-            <strong>❌ API non disponible</strong><br/>
-            Vérifiez: uvicorn api.main:app --reload
-        </div>"""
-        return error_html, history, ""
-    
-    # Ajouter à l'historique (user)
-    history.append({
-        "role": "user",
-        "content": message,
-        "timestamp": datetime.now().strftime("%H:%M")
-    })
-    
-    # Appeler API
-    logger.info(f"Envoi question: {message[:50]}...")
-    api_response = api_client.ask_question(message, max_results=3, template="standard")
-    
-    # Formater réponse
+
+    history.append({"role": "user", "content": message})
+    api_response = api_client.ask_question(message)
     formatted_response = format_response_with_sources(api_response)
-    
-    # Ajouter à l'historique (assistant)
-    history.append({
-        "role": "assistant",
-        "content": formatted_response,
-        "timestamp": datetime.now().strftime("%H:%M")
-    })
-    
-    # Construire HTML
-    chat_html = build_chat_html(history)
-    
-    return chat_html, history, ""
+    history.append({"role": "assistant", "content": formatted_response})
+
+    # Mettre à jour l'historique
+    conversation_manager.add_message(message, formatted_response)
+
+    return build_chat_html(history), history, ""
+
 
 def build_chat_html(history: list) -> str:
-    """Construit le HTML du chat"""
     if not history:
-        return """
-        <div class="empty-state">
-            <div class="empty-state-icon">🌾</div>
-            <div class="empty-state-text">Bienvenue sur AgroConsolling!</div>
-            <p style="color:#ccc;margin-top:10px;">Posez une question pour commencer</p>
-        </div>
-        """
-    
+        return """<div class="empty-state"><div class="empty-state-icon">🌾</div><div class="empty-state-text">Bienvenue sur AgroConsulling!</div><p style="color:#ccc;margin-top:10px;">Posez une question pour commencer</p></div>"""
     html = ""
     for msg in history:
         if msg["role"] == "user":
-            html += f"""
-            <div class="message user">
-                <div style="max-width: 75%;">
-                    <div class="message-content user-message">{msg["content"]}</div>
-                </div>
-            </div>"""
+            html += f"""<div class="message user"><div style="max-width: 75%;"><div class="message-content user-message">{msg["content"]}</div></div></div>"""
         else:
-            html += f"""
-            <div class="message assistant">
-                <div style="max-width: 75%;">
-                    {msg["content"]}
-                </div>
-            </div>"""
-    
+            html += f"""<div class="message assistant"><div style="max-width: 75%;">{msg["content"]}</div></div>"""
     return html
 
-def new_conversation() -> Tuple[str, list]:
-    """Crée une nouvelle conversation"""
-    empty_html = """
-    <div class="empty-state">
-        <div class="empty-state-icon">🌾</div>
-        <div class="empty-state-text">Nouvelle conversation créée</div>
-        <p style="color:#ccc;margin-top:10px;">Posez votre première question</p>
-    </div>
-    """
-    return empty_html, []
+
+def new_conversation() -> Tuple[str, list, str]:
+    conversation_manager.create_conversation()
+    return (
+        """<div class=\"empty-state\"><div class=\"empty-state-icon\">🌾</div><div class=\"empty-state-text\">Nouvelle conversation créée</div><p style=\"color:#ccc;margin-top:10px;\">Posez votre première question</p></div>""",
+        [],
+        gr.update(choices=get_radio_choices(), value=None),
+    )
+
+
+def get_radio_choices():
+    return [conv["title"] for conv in conversation_manager.get_all_conversations()]
+
 
 # ==================== INTERFACE GRADIO ==================== #
 
-with gr.Blocks(title=TITRE, css=CSS_CUSTOM + JS_SCROLL, theme=gr.themes.Soft()) as demo:
-    
-    # État
+with gr.Blocks(title=TITRE, css=CSS_CUSTOM + JS_CUSTOM, theme=gr.themes.Soft()) as demo:
     chat_history = gr.State(value=[])
-    api_status = gr.State(value={"available": False, "message": "Vérification..."})
-    
+
     with gr.Row(elem_classes="chat-container"):
         # Sidebar
         with gr.Column(scale=1, min_width=260, elem_classes="sidebar"):
-            gr.HTML('<div class="sidebar-title">🌾 AgroConsolling</div>')
-            
-            # Statut API
-            status_display = gr.HTML()
-            
+            gr.HTML('<div class="sidebar-title">🌾 AgroConsulling</div>')
             btn_new = gr.Button(
                 "➕ Nouvelle conversation", size="lg", elem_classes="btn-new-chat"
             )
-            
             gr.HTML(
                 '<div style="margin-top:20px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.2);font-weight:bold;">Historique</div>'
             )
-            gr.HTML(
-                '<div style="margin-bottom: 20px;"><div style="padding: 12px; background: rgba(255,255,255,0.1); border-radius: 8px; border-left: 3px solid #fbc02d; font-weight: bold;">💬 Conversation actuelle</div></div>'
+            radio_history = gr.Radio(
+                choices=[
+                    conv["title"]
+                    for conv in conversation_manager.get_all_conversations()
+                ],
+                label="Conversations",
+                value=None,
+                elem_id="radio-history",
             )
-            
-            gr.HTML(
-                '<div style="margin-top:30px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.2);font-size:0.85em;opacity:0.8;">À propos<br/>AgroConsolling v2.0<br/>Powered by RAG + Ollama</div>'
-            )
-        
-        # Main Chat Area
+
+        # Zone principale
         with gr.Column(scale=4, elem_classes="main-content"):
             gr.HTML(
-                '<div class="chat-header"><div class="header-title">🧑🏾‍🌾 Chat AgroConsolling RAG</div></div>'
+                '<div class="chat-header"><div class="header-title">🧑🏾‍🌾 Chat AgroConsulling</div></div>'
             )
-            
             chat_display = gr.HTML(
-                value="""
-                <div class="empty-state">
-                    <div class="empty-state-icon">🌾</div>
-                    <div class="empty-state-text">Bienvenue sur AgroConsolling!</div>
-                    <p style="color:#ccc;margin-top:10px;">Posez une question agricole pour commencer</p>
-                </div>
-                """,
+                value="""<div class="empty-state"><div class="empty-state-icon">🌾</div><div class="empty-state-text">Bienvenue sur AgroConsulling!</div><p style="color:#ccc;margin-top:10px;">Posez une question agricole pour commencer</p></div>""",
                 elem_id="chat-display",
                 elem_classes="chat-messages",
             )
-            
-            with gr.Group(elem_classes="input-area"):
-                with gr.Row():
+
+            # ==== ZONE DE SAISIE CENTRÉE AVEC BOUTON COLLÉ ====
+            with gr.Group(elem_id="input-zone"):
+                with gr.Row(elem_classes="input-wrapper"):
                     msg_input = gr.Textbox(
-                        placeholder="Ex: Quel engrais pour le mil en saison sèche ?",
+                        placeholder="Posez un question sur l'agriculture...",
                         show_label=False,
                         lines=1,
                         max_lines=4,
                         elem_classes="input-field",
                         scale=4,
                     )
-                    btn_send = gr.Button(
-                        "➤", scale=1, elem_classes="btn-send", visible=False
-                    )
-    
-    # ==================== ÉVÉNEMENTS ==================== #
-    
+                    btn_send = gr.Button("➤", elem_classes="btn-send", visible=False)
+
+    # Événements
     def toggle_send_btn(message):
         return gr.update(visible=bool(message.strip()))
-    
-    def check_api_on_load():
-        is_available, message = api_client.check_health()
-        status_html = f"""<div class="status-indicator {'status-healthy' if is_available else 'status-error'}">
-            {message}
-        </div>"""
-        return status_html, {"available": is_available, "message": message}
-    
-    def handle_send(message, history, status_dict):
-        chat_html, new_history, _ = process_chat_message(
-            message, 
-            history, 
-            status_dict["available"]
-        )
-        return chat_html, new_history, ""
-    
-    # Changements
+
+    def handle_send(message, history):
+        chat_html, new_history, _ = process_chat_message(message, history)
+        return chat_html, new_history, "", gr.update(choices=get_radio_choices())
+
+    def switch_conversation(selected_title):
+        # Trouver l'ID de la conversation par le titre
+        for conv in conversation_manager.get_all_conversations():
+            if conv["title"] == selected_title:
+                conversation_manager.current_id = conv["id"]
+                history = conv["messages"]
+                return build_chat_html(history), history
+        return None, None
+
     msg_input.change(fn=toggle_send_btn, inputs=[msg_input], outputs=[btn_send])
-    
-    # Soumission
     msg_input.submit(
         fn=handle_send,
-        inputs=[msg_input, chat_history, api_status],
-        outputs=[chat_display, chat_history, msg_input],
+        inputs=[msg_input, chat_history],
+        outputs=[chat_display, chat_history, msg_input, radio_history],
     )
-    
     btn_send.click(
         fn=handle_send,
-        inputs=[msg_input, chat_history, api_status],
-        outputs=[chat_display, chat_history, msg_input],
+        inputs=[msg_input, chat_history],
+        outputs=[chat_display, chat_history, msg_input, radio_history],
     )
-    
-    # Nouvelle conversation
     btn_new.click(
-        fn=lambda: (new_conversation()[0], new_conversation()[1]),
-        inputs=[],
+        fn=new_conversation, outputs=[chat_display, chat_history, radio_history]
+    )
+    radio_history.change(
+        fn=switch_conversation,
+        inputs=[radio_history],
         outputs=[chat_display, chat_history],
     )
-    
-    # Check API au chargement
-    demo.load(
-        fn=check_api_on_load,
-        inputs=[],
-        outputs=[status_display, api_status],
-    )
-
-# ==================== LANCEMENT ==================== #
 
 if __name__ == "__main__":
-    logger.info("🚀 Démarrage AgroConsolling RAG Frontend")
-    logger.info(f"📡 API URL: {API_BASE_URL}")
+    logger.info("🚀 Démarrage AgroConsulling RAG Frontend")
     demo.launch(share=False, show_error=True)

@@ -1,3 +1,4 @@
+.gitignore
 agrivenv
 .vscode
 others
@@ -19,3 +20,4 @@ embedding_pipeline.log
 api/__pycache__
 data/*.csv
 *.log
+*.zip
