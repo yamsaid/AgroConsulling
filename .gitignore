@@ -18,6 +18,11 @@ frontend/__pycache__
 .env
 embedding_pipeline.log
 api/__pycache__
-data/*.csv
+.venv
 *.log
+*.csv
+embeddings.txt
 *.zip
+fix_index.py
+test_request.json
+*.png
