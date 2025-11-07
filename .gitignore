@@ -1,3 +1,4 @@
+.gitignore
 agrivenv
 .vscode
 others
@@ -24,3 +25,4 @@ embeddings.txt
 *.zip
 fix_index.py
 test_request.json
+*.png

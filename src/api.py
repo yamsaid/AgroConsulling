@@ -63,7 +63,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 import uvicorn
 
-# Import modules optimisés
+# Import modules rag
 from src.embeddings import EmbeddingPipeline
 from src.vector_store import FAISSVectorStore  # Ou ChromaVectorStore
 from src.llm_handler import LLMHandler, PromptTemplate, GenerationConfig, LLMBackend
