@@ -6,6 +6,9 @@ from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
 import chromadb
 from chromadb.config import Settings
+from openai import OpenAI
+import json
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -177,3 +180,27 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+class EmbeddingGenerator:
+    def _init_(self, model_name="text-embedding-3-small"):
+        self.client = OpenAI()
+        self.model_name = model_name
+
+    def generate(self, text_list):
+        """Génère des embeddings pour une liste de textes"""
+        response = self.client.embeddings.create(
+            model=self.model_name,
+            input=text_list
+        )
+        return [item.embedding for item in response.data]
+
+    def save_embeddings(self, texts, embeddings, output_path):
+        """Sauvegarde les embeddings sous forme JSON"""
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        data = [{"text": t, "embedding": e} for t, e in zip(texts, embeddings)]
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        print(f"✅ Embeddings sauvegardés dans {output_path}")
+

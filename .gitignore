@@ -2,3 +2,6 @@ agrivenv
 .vscode
 others
 data/corpus_tes.json
+*.csv
+*.png
+*.jpeg
