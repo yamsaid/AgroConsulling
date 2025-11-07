@@ -187,6 +187,7 @@ class LLMHandler:
     # Alternatives: "mistral:7b-instruct-q4_K_M", "llama3.2:1b", "phi3:mini"
     DEFAULT_HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
     REQUEST_TIMEOUT = 600
+    REQUEST_TIMEOUT_LONG = 180  # 3 minutes pour HuggingFace (modèle en chargement)
     MAX_RETRIES = 2
     RETRY_DELAY = 2
 
@@ -218,6 +219,10 @@ class LLMHandler:
         # Modèles
         self.ollama_model = ollama_model
         self.hf_model = huggingface_model or self.DEFAULT_HF_MODEL
+
+        # cache memory
+        self._response_cache: Dict[str, LLMResponse] = {}
+        self._cache_max_size = 100
 
         # Session HTTP réutilisable (performance)
         self.session = requests.Session()
@@ -617,7 +622,7 @@ RÉPONSE:"""
                 f"{self.HUGGINGFACE_API_URL}/{self.hf_model}",
                 headers=headers,
                 json=payload,
-                timeout=self.REQUEST_TIMEOUT,
+                timeout=self.REQUEST_TIMEOUT_LONG,
             )
 
             response.raise_for_status()
@@ -757,6 +762,13 @@ RÉPONSE:"""
         try:
             self.stats["total_requests"] += 1
 
+            # ✅ AJOUTER : Vérifier cache
+            if self.enable_cache:
+                cache_key = self._get_cache_key(question, context_docs)
+                cached_response = self._get_from_cache(cache_key)
+                if cached_response:
+                    return cached_response
+
             if not question or not question.strip():
                 raise ValueError("Question vide")
 
@@ -765,8 +777,15 @@ RÉPONSE:"""
                 return self._generate_fallback_response(question)
 
             # Construire prompt (toujours simple pour stabilité)
-            prompt = self._build_simple_prompt(question, context_docs)
+            # Construire prompt selon le template demandé
+            if template == PromptTemplate.CONCISE or len(context_docs) > 5:
+                # Prompt simple pour stabilité avec beaucoup de contexte
+                prompt = self._build_simple_prompt(question, context_docs)
+            else:
+                # Prompt structuré pour qualité
+                prompt = self._build_agricultural_prompt(question, context_docs, template)
 
+            logger.debug(f"Template utilisé: {template.value if template != PromptTemplate.CONCISE else 'simple'}")
             logger.debug(f"Prompt généré: {len(prompt)} caractères")
 
             # Génération avec Ollama
@@ -791,6 +810,10 @@ RÉPONSE:"""
             )
 
             logger.info(f"✅ Réponse générée: '{question[:40]}...'")
+
+            # ✅ AJOUTER : Sauvegarder dans cache
+            if self.enable_cache:
+                self._save_to_cache(cache_key, llm_response)
 
             return llm_response
 
@@ -855,16 +878,31 @@ RÉPONSE:"""
         cache_str = f"{question}||{'|'.join(doc_ids)}"
         return hashlib.md5(cache_str.encode()).hexdigest()
 
-    @lru_cache(maxsize=100)
     def _get_from_cache(self, cache_key: str) -> Optional[LLMResponse]:
-        """Récupère réponse depuis cache (LRU cache Python)"""
-        # Note: Pour un cache persistant, utiliser Redis ou SQLite
-        return None  # Implémentation simple via @lru_cache
+        """Récupère réponse depuis cache en mémoire"""
+        if not self.enable_cache:
+            return None
+        
+        cached = self._response_cache.get(cache_key)
+        if cached:
+            self.stats["cache_hits"] += 1
+            logger.info(f"💾 Cache hit: {cache_key[:16]}...")
+        return cached
 
     def _save_to_cache(self, cache_key: str, response: LLMResponse):
-        """Sauvegarde réponse en cache"""
-        # Cache géré par @lru_cache sur _get_from_cache
-        pass
+        """Sauvegarde réponse en cache avec limite de taille"""
+        if not self.enable_cache:
+            return
+        
+        # Limiter taille du cache (FIFO simple)
+        if len(self._response_cache) >= self._cache_max_size:
+            # Supprimer la plus vieille entrée
+            oldest_key = next(iter(self._response_cache))
+            del self._response_cache[oldest_key]
+            logger.debug(f"🗑️ Cache plein, suppression: {oldest_key[:16]}...")
+        
+        self._response_cache[cache_key] = response
+        logger.debug(f"💾 Cache saved: {cache_key[:16]}...")
 
     # ========================================================================
     # UTILITAIRES

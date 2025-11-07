@@ -125,6 +125,8 @@ class EmbeddingPipeline:
                     logger.info("Modele quantifie pour CPU")
                 except Exception as e:
                     logger.warning(f"Quantization echouee: {e}")
+                    logger.info("Continuation sans quantization (performances CPU standard)")
+                    # Fallback explicite : le modèle reste en float32
 
             # Alias pour compatibilité API
             self.model = self.embedding_model
@@ -431,12 +433,24 @@ class EmbeddingPipeline:
         logger.info("=" * 60)
 
     def test_retrieval(
-        self, query: str = "Quel engrais pour le mil ?", n_results: int = 3
+        self, 
+        query: str = "Quel engrais pour le mil ?", 
+        n_results: int = 3,
+        min_similarity: float = None  # ✅ NOUVEAU PARAMÈTRE
     ) -> List[Dict]:
         """
         Teste le retrieval avec filtrage par seuil de similarité cosinus.
+        
+        Args:
+            query: Question de test
+            n_results: Nombre de résultats souhaités
+            min_similarity: Seuil minimum (par défaut: self.distance_threshold)
         """
-        logger.info(f"Test de retrieval: '{query}' (seuil: {self.distance_threshold})")
+        # Utiliser le seuil fourni ou celui par défaut
+        threshold = min_similarity if min_similarity is not None else self.distance_threshold
+        
+        logger.info(f"Test de retrieval: '{query}' (seuil: {threshold})")
+        #logger.info(f"Test de retrieval: '{query}' (seuil: {self.distance_threshold})")
 
         if not self.embedding_model or not self.collection:
             raise ValueError("Le pipeline n'est pas initialise")
@@ -471,7 +485,7 @@ class EmbeddingPipeline:
             similarity = 1 - distance  # Conversion distance → similarité cosinus
 
             # Filtrage par seuil de similarité
-            if similarity >= self.distance_threshold:
+            if similarity >= threshold:
                 result = {
                     "rank": len(search_results) + 1,
                     "document": doc,

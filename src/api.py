@@ -32,6 +32,7 @@ import hashlib
 from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
 from functools import lru_cache
+from typing import Tuple  # Pour le type de retour
 
 # Forcer la sortie console en UTF-8 (évite les erreurs Unicode sur Windows)
 try:
@@ -62,7 +63,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 import uvicorn
 
-# Import modules optimisés
+# Import modules rag
 from src.embeddings import EmbeddingPipeline
 from src.vector_store import FAISSVectorStore  # Ou ChromaVectorStore
 from src.llm_handler import LLMHandler, PromptTemplate, GenerationConfig, LLMBackend
@@ -209,6 +210,199 @@ class SystemInfoResponse(BaseModel):
 # ============================================================================
 # CLASSE API PRINCIPALE
 # ============================================================================
+# À ajouter dans api/main.py, juste avant la classe AgriculturalRAGAPI
+
+import re
+from enum import Enum
+
+
+class IntentType(Enum):
+    """Types d'intentions détectées"""
+
+    GREETING = "greeting"
+    THANKS = "thanks"
+    SELF_DESCRIPTION = "self_description"
+    OUT_OF_DOMAIN = "out_of_domain"
+    AGRICULTURE = "agriculture"
+
+
+class IntentDetector:
+    """Détecte l'intention de la question de l'utilisateur"""
+
+    # Salutations (variantes)
+    GREETINGS = {
+        r"\b(bonjour|hello|salut|hi|hey|coucou|allo)\b": "greeting",
+        r"\b(bonsoir|good evening|bonsoir|bonne nuit)\b": "greeting",
+        r"^(salutations?|greetings?|howdy)": "greeting",
+        r"\b(comment ça va|ça va|how are you|how\'s it)\b": "greeting",
+    }
+
+    # Remerciements (variantes)
+    THANKS = {
+        r"\b(merci|thank you|thanks|ta?q)\b": "thanks",
+        r"\b(grâces?|gratitude|appreci)\b": "thanks",
+        r"\b(c\'est gentil|très aimable|kind of you)\b": "thanks",
+        r"\b(merci beaucoup|thank you very much|merci mille fois)\b": "thanks",
+    }
+
+    # Auto-description du modèle (variantes)
+    SELF_DESCRIPTION = {
+        r"\b(qui es-?tu|who are you|c\'est quoi|what are you)\b": "self_description",
+        r"\b(dis-?moi qui tu es|tell me about you|parle de toi)\b": "self_description",
+        r"\b(présente-?toi|introduce yourself|quel est ton nom)\b": "self_description",
+        r"\b(qu\'est-ce que tu fais|what do you do|ton rôle)\b": "self_description",
+        r"\b(à quoi tu sers|what is your purpose|ton objectif)\b": "self_description",
+        r"\b(comment tu marches|how do you work|explique-?toi)\b": "self_description",
+        r"\b(qu\'est-ce que tu es|what are you|tes capacités)\b": "self_description",
+        r"\b(parle de (toi|ton système)|about (you|your system))\b": "self_description",
+    }
+
+    # Domaines agricoles (mots-clés)
+    AGRICULTURE_KEYWORDS = {
+        "culture",
+        "cultiv",
+        "semis",
+        "récolte",
+        "engrais",
+        "pesticide",
+        "ravageur",
+        "maladie",
+        "sol",
+        "irrigation",
+        "climat",
+        "rendement",
+        "plant",
+        "graine",
+        "mil",
+        "maïs",
+        "riz",
+        "arachide",
+        "sorgho",
+        "coton",
+        "café",
+        "cacao",
+        "élevage",
+        "bétail",
+        "agriculture",
+        "farming",
+        "crop",
+        "pest",
+        "disease",
+        "soil",
+        "seed",
+        "harvest",
+        "fertilizer",
+        "yield",
+        "production",
+        "farm",
+        "agricultural",
+        "labour",
+        "labour",
+        "engrais",
+        "traitement",
+        "protection",
+        "variété",
+        "semence",
+        "technique",
+        "méthode",
+        "pratique",
+    }
+
+    @staticmethod
+    def detect_intent(question: str) -> Tuple[IntentType, float]:
+        """
+        Détecte l'intention de la question
+
+        Args:
+            question: La question de l'utilisateur
+
+        Returns:
+            (IntentType, confidence_score)
+        """
+        question_lower = question.lower().strip()
+
+        # 1. Vérifier salutations
+        for pattern, intent in IntentDetector.GREETINGS.items():
+            if re.search(pattern, question_lower, re.IGNORECASE):
+                return (IntentType.GREETING, 0.95)
+
+        # 2. Vérifier remerciements (mais pas si c'est une question)
+        if len(question_lower.split()) < 6:  # Courte phrase = probablement merci
+            for pattern, intent in IntentDetector.THANKS.items():
+                if re.search(pattern, question_lower, re.IGNORECASE):
+                    return (IntentType.THANKS, 0.95)
+
+        # 3. Vérifier auto-description
+        for pattern, intent in IntentDetector.SELF_DESCRIPTION.items():
+            if re.search(pattern, question_lower, re.IGNORECASE):
+                return (IntentType.SELF_DESCRIPTION, 0.95)
+
+        # 4. Vérifier si c'est une question agricole
+        words = re.findall(r"\w+", question_lower)
+        ag_matches = sum(
+            1
+            for word in words
+            if any(ag in word for ag in IntentDetector.AGRICULTURE_KEYWORDS)
+        )
+        ag_score = ag_matches / len(words) if words else 0
+
+        if ag_score > 0.2:  # Au moins 20% de mots agricoles
+            return (IntentType.AGRICULTURE, ag_score)
+
+        # 5. Sinon = hors domaine
+        return (IntentType.OUT_OF_DOMAIN, 0.5)
+
+
+# Réponses prédéfinies
+PREDEFINED_RESPONSES = {
+    IntentType.GREETING: {
+        "reponse": "Bonjour ! Bienvenue sur AgroConsulting, votre assistant agricole. Je suis ici pour répondre à vos questions sur l'agriculture au Burkina Faso. Comment puis-je vous aider ?",
+        "emoji": "👋",
+    },
+    IntentType.THANKS: {
+        "reponse": "De rien ! C'est un plaisir de vous aider. Si vous avez d'autres questions sur l'agriculture, n'hésitez pas à les poser.",
+        "emoji": "😊",
+    },
+    IntentType.SELF_DESCRIPTION: {
+        "reponse": """Je suis AgroConsulting, un assistant agricole basé sur l'IA. Voici mes caractéristiques :
+
+🤖 **Qui je suis :**
+- Assistant de questions-réponses spécialisé en agriculture
+- Basé sur la technologie RAG (Retrieval-Augmented Generation)
+- Formé sur une base de connaissances agricoles du Burkina Faso
+
+📚 **Mes capacités :**
+- Répondre à des questions sur la culture de plantes (mil, maïs, riz, arachide, etc.)
+- Fournir des conseils sur les engrais, pesticides et techniques agricoles
+- Identifier les ravageurs et maladies des cultures
+- Expliquer les bonnes pratiques agricoles
+- Citer les sources de mes informations
+
+🌍 **Spécialisation :**
+- Contexte agricole du Burkina Faso
+- Pratiques adaptées au climat semi-aride
+- Ressources locales et accessibles
+
+⚙️ **Fonctionnement :**
+- Je recherche les documents pertinents dans ma base
+- Je analyse le contenu pour générer une réponse
+- Je vous indique les sources utilisées
+- Je suis transparent sur mes limites de connaissances
+
+⚠️ **Limites :**
+- Je ne peux répondre que sur les sujets agricoles
+- Si je n'ai pas assez d'informations (score < 0.6), je vous le dis honnêtement
+- Pour des conseils vétérinaires spécialisés, consultez un expert
+
+💡 **Comment m'utiliser :**
+Posez des questions claires et détaillées sur vos préoccupations agricoles !""",
+        "emoji": "🤖",
+    },
+    IntentType.OUT_OF_DOMAIN: {
+        "reponse": "Je suis spécialisé uniquement dans l'agriculture. Votre question ne semble pas être en rapport avec ce domaine. Pourriez-vous reformuler votre question en me posant quelque chose sur l'agriculture ? 🌾",
+        "emoji": "🌾",
+    },
+}
 
 
 class AgriculturalRAGAPI:
@@ -434,7 +628,7 @@ class AgriculturalRAGAPI:
 
                     self.vector_store = ChromaVectorStore("./data/chroma_db")
 
-                # ✅ AMÉLIORATION : Vérification intelligente
+                # Vérification intelligente
                 from pathlib import Path
                 import os
 
@@ -455,7 +649,7 @@ class AgriculturalRAGAPI:
                 embeddings_exist = Path(embeddings_path).exists()
 
                 if index_exists:
-                    # ✅ CAS 1 : Index existe déjà (mode normal)
+                    # CAS 1 : Index existe déjà (mode normal)
                     logger.info("[LOAD] Index existant detecte, chargement...")
                     success = self.vector_store.load()
                     if success:
@@ -467,7 +661,7 @@ class AgriculturalRAGAPI:
                         logger.error("[ERROR] Echec chargement vector store")
 
                 elif embeddings_exist:
-                    # ✅ CAS 2 : Embeddings existent mais pas l'index (recréation rapide)
+                    # CAS 2 : Embeddings existent mais pas l'index (recréation rapide)
                     logger.info(
                         "[REBUILD] Embeddings trouves, reconstruction de l'index..."
                     )
@@ -495,7 +689,7 @@ class AgriculturalRAGAPI:
                     logger.info(f"[SUCCESS] Index reconstruit: {len(corpus)} documents")
 
                 else:
-                    # ✅ CAS 3 : Premier démarrage - Création complète
+                    # CAS 3 : Premier démarrage - Création complète
                     if is_dev_mode:
                         logger.warning(
                             "[SETUP] Premier demarrage detecte - Creation de l'index..."
@@ -845,6 +1039,8 @@ class AgriculturalRAGAPI:
                 content={"detail": "Endpoint non trouve", "success": False},
             )
 
+    # Remplacer la fonction async def _handle_ask() entière par ceci :
+
     async def _handle_ask(self, ask_request: AskRequest) -> AskResponse:
         """Traite une question utilisateur (logique métier)"""
         try:
@@ -853,6 +1049,41 @@ class AgriculturalRAGAPI:
 
             logger.info(f"[Q] Question recue: {ask_request.question}")
 
+            # NOUVEAU: Détecter l'intention
+            intent, confidence = IntentDetector.detect_intent(ask_request.question)
+            logger.info(f"[INTENT] Type: {intent.value}, Confiance: {confidence:.2f}")
+
+            # Traiter les intentions spéciales (non-agricoles)
+            if intent in [
+                IntentType.GREETING,
+                IntentType.THANKS,
+                IntentType.SELF_DESCRIPTION,
+                IntentType.OUT_OF_DOMAIN,
+            ]:
+                processing_time = time.time() - start_time
+                response_data = PREDEFINED_RESPONSES[intent]
+
+                return AskResponse(
+                    success=True,
+                    question=ask_request.question,
+                    reponse=response_data["reponse"],
+                    sources=[],
+                    metadata={
+                        "backend": "predefined_response",
+                        "model": "intent_detector",
+                        "generation_time": 0,
+                        "tokens_generated": 0,
+                        "tokens_per_second": 0,
+                        "documents_used": 0,
+                        "processing_time": processing_time,
+                        "template": ask_request.template,
+                        "cached": False,
+                        "intent_type": intent.value,
+                        "intent_confidence": confidence,
+                    },
+                )
+
+            # Si on arrive ici, c'est une question agricole
             # Vérifier système prêt
             if not self._is_system_ready():
                 raise HTTPException(
@@ -894,6 +1125,159 @@ class AgriculturalRAGAPI:
             if not search_results:
                 logger.warning("[WARNING] Aucun document pertinent trouve")
 
+            # 3. Calculer le score de confiance moyen et valider
+            avg_score = (
+                sum(s.similarity_score for s in search_results) / len(search_results)
+                if search_results
+                else 0
+            )
+
+            logger.info(f"[CONFIDENCE] Score moyen: {avg_score:.3f}")
+
+            # Rejeter si confiance trop basse
+            if avg_score < 0.6:
+                logger.warning(f"[LOW_CONFIDENCE] Score {avg_score:.3f} < 0.6 - Rejet")
+                processing_time = time.time() - start_time
+                return AskResponse(
+                    success=False,
+                    question=ask_request.question,
+                    reponse="Je n'ai pas d'information fiable sur ce sujet dans ma base de connaissances. Veuillez essayer une autre question ou consulter un expert agricole.",
+                    sources=[],
+                    metadata={
+                        "backend": "N/A",
+                        "model": "N/A",
+                        "generation_time": 0,
+                        "tokens_generated": 0,
+                        "tokens_per_second": 0,
+                        "documents_used": 0,
+                        "processing_time": processing_time,
+                        "template": ask_request.template,
+                        "cached": False,
+                        "confidence_score": avg_score,
+                        "rejection_reason": "Confiance insuffisante (< 0.6)",
+                        "intent_type": intent.value,
+                    },
+                )
+
+            # 4. Préparer contexte pour LLM
+            context_docs = []
+            sources_info = []
+
+            for result in search_results:
+                context_docs.append(
+                    {"text": result.document_text, "metadata": result.metadata}
+                )
+
+                sources_info.append(
+                    SourceInfo(
+                        titre=result.metadata.get("titre", "Document inconnu"),
+                        source=result.metadata.get("source", "Source inconnue"),
+                        organisme=result.metadata.get("organisme", "N/A"),
+                        pertinence=float(result.similarity_score),
+                    )
+                )
+
+                if ask_request.verbose:
+                    logger.info(
+                        f"   - {result.metadata.get('titre', 'Doc')} (score: {result.similarity_score:.3f})"
+                    )
+
+            # 5. Template mapping
+            template_map = {
+                "standard": PromptTemplate.STANDARD,
+                "concise": PromptTemplate.CONCISE,
+                "detailed": PromptTemplate.DETAILED,
+            }
+            template = template_map.get(ask_request.template, PromptTemplate.STANDARD)
+
+            # 6. Génération LLM
+            if ask_request.verbose:
+                logger.info("[LLM] Generation reponse...")
+
+            llm_response = self.llm_handler.generate_answer(
+                ask_request.question,
+                context_docs,
+                template=template,
+            )
+
+            processing_time = time.time() - start_time
+
+            # 7. Construire réponse
+            response = AskResponse(
+                success=llm_response.success,
+                question=ask_request.question,
+                reponse=llm_response.text,
+                sources=sources_info,
+                metadata={
+                    "backend": llm_response.backend,
+                    "model": llm_response.model,
+                    "generation_time": llm_response.generation_time,
+                    "tokens_generated": llm_response.tokens_generated,
+                    "tokens_per_second": llm_response.tokens_per_second,
+                    "documents_used": len(search_results),
+                    "processing_time": processing_time,
+                    "template": ask_request.template,
+                    "cached": False,
+                    "confidence_score": avg_score,
+                    "intent_type": intent.value,
+                },
+            )
+
+            # Cache
+            if self.enable_cache:
+                self._save_to_cache(cache_key, response)
+
+            logger.info(f"[SUCCESS] Reponse generee en {processing_time:.2f}s")
+            return response
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"[ERROR] Erreur traitement: {e}")
+            import traceback
+
+            traceback.print_exc()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Erreur: {str(e)}",
+            )
+            # ============================================================
+            # NOUVEAU CODE À AJOUTER ICI - SEUIL DE CONFIANCE
+            # ============================================================
+
+            # Calculer le score de confiance moyen
+            avg_score = (
+                sum(s.similarity_score for s in search_results) / len(search_results)
+                if search_results
+                else 0
+            )
+
+            logger.info(f"[CONFIDENCE] Score moyen: {avg_score:.3f}")
+
+            # Rejeter si confiance trop basse
+            if avg_score < 0.6:
+                logger.warning(f"[LOW_CONFIDENCE] Score {avg_score:.3f} < 0.6 - Rejet")
+                processing_time = time.time() - start_time
+                return AskResponse(
+                    success=False,
+                    question=ask_request.question,
+                    reponse="Je n'ai pas d'information fiable sur ce sujet dans ma base de connaissances. Veuillez essayer une autre question ou consulter un expert agricole.",
+                    sources=[],
+                    metadata={
+                        "backend": "N/A",
+                        "model": "N/A",
+                        "generation_time": 0,
+                        "tokens_generated": 0,
+                        "tokens_per_second": 0,
+                        "documents_used": 0,
+                        "processing_time": processing_time,
+                        "template": ask_request.template,
+                        "cached": False,
+                        "confidence_score": avg_score,
+                        "rejection_reason": "Confiance insuffisante (< 0.6)",
+                    },
+                )
+
             # 3. Préparer contexte pour LLM
             context_docs = []
             sources_info = []
@@ -933,7 +1317,6 @@ class AgriculturalRAGAPI:
                 ask_request.question,
                 context_docs,
                 template=template,
-                # use_simple_prompt=True
             )
 
             processing_time = time.time() - start_time
@@ -1017,9 +1400,9 @@ class AgriculturalRAGAPI:
 
 # Instance globale
 api_instance = AgriculturalRAGAPI(
-    use_faiss=False,  # Utiliser FAISS (plus rapide)
-    enable_cache=True,  # Activer cache
-    enable_rate_limit=True,  # Activer rate limiting
+    use_faiss=True,
+    enable_cache=True,
+    enable_rate_limit=True,
 )
 
 app = api_instance.app
@@ -1042,16 +1425,23 @@ def start_server(
         reload: Auto-reload en développement
         workers: Nombre de workers (production)
     """
-    logger.info(f"[LAUNCH] Démarrage serveur sur {host}:{port}")
+    logger.info(f"[LAUNCH] Demarrage serveur sur {host}:{port}")
+
+    import sys
+
+    if sys.platform == "win32":
+        workers = 1
+        reload = True
 
     uvicorn.run(
         "api.main:app",
         host=host,
         port=port,
         reload=reload,
-        workers=workers if not reload else 1,  # Workers incompatibles avec reload
+        workers=workers if not reload else 1,
         log_level="info",
         access_log=True,
+        loop="asyncio",
     )
 
 
@@ -1060,5 +1450,5 @@ if __name__ == "__main__":
     start_server(
         host="0.0.0.0",
         port=8000,
-        reload=True,  # Mode développement
+        reload=True,
     )

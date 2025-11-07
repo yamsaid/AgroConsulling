@@ -184,70 +184,216 @@ def _get_chroma_client(path: str, settings: Settings) -> chromadb.PersistentClie
     Returns:
         chromadb.PersistentClient: Instance du client
     """
-    path_str = str(path)
+    # Normaliser le chemin pour éviter les problèmes de casse/paths
+    path_str = str(Path(path).resolve())
     
     # Vérifier si un client existe déjà pour ce chemin dans notre registre
     if path_str in _chroma_clients:
+        logger.debug(f"[REUSE] Réutilisation client ChromaDB existant: {path_str}")
         return _chroma_clients[path_str]
     
     # Créer nouveau client
     try:
         client = chromadb.PersistentClient(path=path_str, settings=settings)
         _chroma_clients[path_str] = client
+        logger.debug(f"[NEW] Nouveau client ChromaDB créé: {path_str}")
         return client
-    except Exception as e:
+    except ValueError as e:
         error_msg = str(e)
-        if "already exists" in error_msg or "already exist" in error_msg:
-            # Une instance existe déjà au niveau global de ChromaDB
-            # On ne peut pas la récupérer directement, mais on peut
-            # créer un nouveau client avec les paramètres minimaux qui devrait
-            # fonctionner car l'instance existe déjà
-            logger.warning(f"[WARNING] Instance ChromaDB existante détectée pour {path_str}, création avec paramètres minimaux...")
+        if "already exists" in error_msg.lower() or "different settings" in error_msg.lower():
+            # Une instance existe déjà avec des paramètres différents
+            # Essayer de récupérer le client existant avec des paramètres minimaux
+            logger.warning(f"[WARNING] Instance ChromaDB existante détectée pour {path_str}, tentative réutilisation...")
             try:
-                # Essayer avec les paramètres minimaux (sans allow_reset si présent)
+                # Essayer avec les paramètres minimaux (sans allow_reset pour compatibilité)
                 minimal_settings = Settings(
                     anonymized_telemetry=False,
                     is_persistent=True
                 )
+                # Si un client existe déjà, essayer de le créer avec les mêmes paramètres minimaux
                 client = chromadb.PersistentClient(path=path_str, settings=minimal_settings)
                 _chroma_clients[path_str] = client
+                logger.info(f"[SUCCESS] Client ChromaDB récupéré avec paramètres minimaux")
                 return client
-            except Exception as e2:
-                # Dernier recours: créer sans paramètres spécifiques
-                logger.warning(f"[WARNING] Tentative avec paramètres par défaut...")
-                client = chromadb.PersistentClient(path=path_str)
-                _chroma_clients[path_str] = client
-                return client
+            except ValueError as e2:
+                # Si ça échoue encore, essayer sans paramètres (utilise les paramètres de l'instance existante)
+                logger.warning(f"[WARNING] Tentative sans paramètres spécifiques...")
+                try:
+                    # Dernier recours: essayer de récupérer depuis le registre global ChromaDB
+                    # En utilisant le chemin normalisé
+                    client = chromadb.PersistentClient(path=path_str)
+                    _chroma_clients[path_str] = client
+                    logger.info(f"[SUCCESS] Client ChromaDB récupéré sans paramètres")
+                    return client
+                except Exception as e3:
+                    # Si tout échoue, utiliser le client du registre s'il existe
+                    logger.error(f"[ERROR] Impossible de créer/récupérer client ChromaDB: {e3}")
+                    # Si on a déjà un client dans le registre pour un chemin similaire, l'utiliser
+                    for cached_path, cached_client in _chroma_clients.items():
+                        if Path(cached_path).resolve() == Path(path_str).resolve():
+                            logger.info(f"[FALLBACK] Utilisation client existant depuis registre")
+                            return cached_client
+                    raise
         else:
             raise
-
+    except Exception as e:
+        # Autre type d'erreur
+        logger.error(f"[ERROR] Erreur création client ChromaDB: {e}")
+        raise
 
 class ChromaVectorStore(BaseVectorStore):
     """
-    Vector Store basé sur ChromaDB - Version Optimisée
+    Vector Store basé sur ChromaDB - Version Optimisée et Corrigée
     
-    Améliorations par rapport au code original:
-    - Auto-détection dimension embeddings
-    - Méthodes save() et load()
-    - Meilleure gestion mémoire
-    - Performance optimisée pour 500+ documents
-    - Format SearchResult standardisé
-    
-    Usage:
-        >>> store = ChromaVectorStore("./data/chroma_db")
-        >>> store.create_index(corpus, embeddings)
-        >>> results = store.search(query_embedding, k=5)
+    Corrections:
+    - Initialisation complète de tous les attributs
+    - Support de self.corpus pour compatibilité API
+    - Gestion robuste de embedding_dimension
+    - Validation corpus intégrée
     """
     
     DEFAULT_COLLECTION_NAME = "agriculture_burkina"
     DEFAULT_BATCH_SIZE = 100
     
+    _instances = {}
+    
     def __init__(self, persist_directory: str = "./data/chroma_db"):
-        super().__init__(persist_directory)
+        """
+        Args:
+            persist_directory: Répertoire de persistance ChromaDB
+        """
+        self.persist_directory = Path(persist_directory)  # ✅ Convertir en Path
+        self.collection_name = self.DEFAULT_COLLECTION_NAME  # ✅ Utiliser le nom par défaut
+        
+        # ✅ CORRECTION : Initialiser TOUS les attributs
         self.client = None
         self.collection = None
-        self.corpus_mapping = {}  # Mapping ID -> Document complet
-    
+        #self.corpus = []  # ✅ AJOUTÉ : Pour compatibilité API
+        self.corpus_mapping = {}  # ✅ Mapping id -> document
+        self.document_count = 0
+        self.embedding_dimension = None  # ✅ AJOUTÉ : Sera défini lors de create/load
+        
+        # ✅ Vérifier si instance existe déjà (réutilisation)
+        if str(persist_directory) in ChromaVectorStore._instances:
+            logger.info(f"[REUSE] Réutilisation instance ChromaDB existante: {persist_directory}")
+            existing = ChromaVectorStore._instances[str(persist_directory)]
+            self.client = existing.client
+            self.collection = existing.collection
+            self.corpus = existing.corpus
+            self.corpus_mapping = existing.corpus_mapping
+            self.document_count = existing.document_count
+            self.embedding_dimension = existing.embedding_dimension
+            # ✅ S'assurer que persist_directory est un Path
+            if not isinstance(self.persist_directory, Path):
+                self.persist_directory = Path(self.persist_directory)
+            return
+        
+        # ✅ Forcer réinitialisation singleton ChromaDB si nécessaire
+        try:
+            import chromadb
+            if hasattr(chromadb.api, '_client_instances'):
+                chromadb.api._client_instances.clear()
+        except:
+            pass
+        
+        # ✅ Enregistrer cette instance
+        ChromaVectorStore._instances[str(persist_directory)] = self
+
+        @property
+        def corpus(self) -> List[Dict]:
+            """
+            ✅ Propriété calculée : retourne le corpus depuis corpus_mapping
+            Évite la duplication mémoire
+            """
+            return list(self.corpus_mapping.values())
+
+        @property
+        def corpus_size(self) -> int:
+            """Nombre de documents dans le corpus"""
+            return len(self.corpus_mapping)
+        
+        def _get_chroma_settings(self, allow_reset: bool = False) -> Settings:
+            """
+            ✅ Crée des Settings ChromaDB cohérents
+            
+            Args:
+                allow_reset: Autoriser reset de la collection
+                
+            Returns:
+                Settings configurés
+            """
+            return Settings(
+                anonymized_telemetry=False,
+                is_persistent=True,
+                allow_reset=allow_reset  # Configurable selon le contexte
+            )
+
+    def validate_corpus_data(self, corpus: List[Dict], embeddings: Union[List, np.ndarray]) -> None:
+        """
+        ✅ AJOUTÉ : Valide les données du corpus
+        
+        Args:
+            corpus: Liste de documents
+            embeddings: Embeddings correspondants
+            
+        Raises:
+            ValueError: Si données invalides
+        """
+        if not corpus:
+            raise ValueError("Corpus vide")
+        
+        if not embeddings or len(embeddings) == 0:
+            raise ValueError("Embeddings vides")
+        
+        if len(corpus) != len(embeddings):
+            raise ValueError(
+                f"Taille corpus ({len(corpus)}) != taille embeddings ({len(embeddings)})"
+            )
+        
+        # Vérifier structure corpus
+        # Vérifier structure corpus avec mapping flexible
+        required_fields = {
+            'id': ['id', 'chunk_id', 'doc_id'],  # Accepter plusieurs noms
+            'text': ['contenu', 'text', 'content']  # Idem
+        }
+
+        for i, doc in enumerate(corpus[:5]):
+            for field, alternatives in required_fields.items():
+                # Vérifier si au moins une alternative existe
+                if not any(alt in doc for alt in alternatives):
+                    raise ValueError(
+                        f"Document {i} manque un champ '{field}'. "
+                        f"Alternatives acceptées: {alternatives}"
+                    )
+                
+                # Normaliser le nom du champ (optionnel mais recommandé)
+                if field == 'id' and 'id' not in doc:
+                    for alt in alternatives:
+                        if alt in doc:
+                            doc['id'] = doc[alt]
+                            break
+                
+                if field == 'text' and 'text' not in doc:
+                    for alt in alternatives:
+                        if alt in doc:
+                            doc['text'] = doc[alt]
+                            break
+
+        logger.info("✅ Structure corpus validée et normalisée")
+
+
+        # Détecter dimension embeddings
+        if isinstance(embeddings, np.ndarray):
+            self.embedding_dimension = embeddings.shape[1]
+        elif isinstance(embeddings, list) and len(embeddings) > 0:
+            first_emb = embeddings[0]
+            if isinstance(first_emb, np.ndarray):
+                self.embedding_dimension = len(first_emb)
+            elif isinstance(first_emb, list):
+                self.embedding_dimension = len(first_emb)
+        
+        logger.info(f"[VALID] Corpus: {len(corpus)} docs, Embeddings: {self.embedding_dimension}D")
+
     def create_index(self, corpus: List[Dict], embeddings: Union[List, np.ndarray],
                     collection_name: str = DEFAULT_COLLECTION_NAME,
                     reset: bool = False) -> bool:
@@ -267,17 +413,20 @@ class ChromaVectorStore(BaseVectorStore):
             logger.info("[LAUNCH] Création index ChromaDB...")
             start_time = time.time()
             
+            # ✅ S'assurer que persist_directory est un Path
+            if not isinstance(self.persist_directory, Path):
+                self.persist_directory = Path(self.persist_directory)
+            
+            # ✅ Créer répertoire si nécessaire
+            self.persist_directory.mkdir(parents=True, exist_ok=True)
+            
             # Validation données
             self.validate_corpus_data(corpus, embeddings)
             
-            # Initialiser ChromaDB (utiliser le registre pour éviter les instances multiples)
-            settings = Settings(
-                anonymized_telemetry=False,
-                allow_reset=True,
-                is_persistent=True
-            )
+            # Initialiser ChromaDB avec paramètres cohérents
+            # ✅ Utiliser allow_reset seulement si reset=True pour éviter conflits avec load()
+            settings = self._get_chroma_settings(allow_reset=reset)
             self.client = _get_chroma_client(str(self.persist_directory), settings)
-            
             # Gérer reset si demandé
             if reset:
                 try:
@@ -306,6 +455,9 @@ class ChromaVectorStore(BaseVectorStore):
             ids = []
             embeddings_list = []
             
+            # ✅ Remplir self.corpus pour compatibilité API
+            #self.corpus = corpus.copy()
+            
             for i, doc in enumerate(corpus):
                 # Stocker mapping complet
                 self.corpus_mapping[doc['id']] = doc
@@ -315,7 +467,7 @@ class ChromaVectorStore(BaseVectorStore):
                 
                 metadatas.append({
                     'id': doc['id'],
-                    'titre': doc['titre'][:200],  # Limiter taille
+                    'titre': doc.get('titre', 'Unknown')[:200],
                     'source': doc.get('source', 'Unknown')[:200],
                     'organisme': doc.get('organisme', 'Unknown'),
                     'type': doc.get('type', 'general')
@@ -344,17 +496,14 @@ class ChromaVectorStore(BaseVectorStore):
                     ids=ids[start_idx:end_idx]
                 )
                 
-                logger.info(f" Batch {batch_num+1}/{total_batches} ajouté ({end_idx-start_idx} docs)")
+                logger.info(f"   Batch {batch_num+1}/{total_batches} ajouté ({end_idx-start_idx} docs)")
             
             self.document_count = len(corpus)
             elapsed = time.time() - start_time
             
             logger.info(f"[SUCCESS] Index créé: {self.document_count} documents en {elapsed:.2f}s")
-            # Éviter division par zéro si elapsed est trop petit
-            if elapsed > 1e-6:  # Plus de 1 microseconde
+            if elapsed > 1e-6:
                 logger.info(f"[STATS] Vitesse: {self.document_count/elapsed:.1f} docs/sec")
-            else:
-                logger.info(f"[STATS] Vitesse: > {self.document_count/1e-6:.1f} docs/sec (temps < 1µs)")
             
             # Sauvegarder corpus mapping
             self.save()
@@ -363,21 +512,27 @@ class ChromaVectorStore(BaseVectorStore):
             
         except Exception as e:
             logger.error(f"[ERROR] Erreur création index: {e}")
-            raise
+            import traceback
+            traceback.print_exc()
+            return False
     
     def search(self, query_embedding: Union[List[float], np.ndarray], 
-            k: int = 5,
-            filter_metadata: Optional[Dict] = None) -> List[SearchResult]:
+               k: int = 5,
+               filter_metadata: Optional[Dict] = None) -> List[SearchResult]:
         """Recherche sémantique dans le vector store"""
         try:
+            # ✅ Auto-chargement si collection non initialisée
             if not self.collection:
-                raise RuntimeError("Index non initialisé. Appeler create_index() d'abord.")
+                logger.warning("[WARNING] Collection non initialisée, tentative auto-chargement...")
+                load_success = self.load()
+                if not load_success or not self.collection:
+                    raise RuntimeError("Index non initialisé. Appeler create_index() ou load() d'abord.")
             
-            # ✅ Convertir query en format ChromaDB
+            # Convertir query en format ChromaDB
             if isinstance(query_embedding, np.ndarray):
                 query_embedding = query_embedding.tolist()
             
-            # ✅ S'assurer du format [[embedding]]
+            # S'assurer du format [[embedding]]
             if not isinstance(query_embedding, list):
                 query_embedding = query_embedding.tolist()
             
@@ -407,7 +562,7 @@ class ChromaVectorStore(BaseVectorStore):
                     # Récupérer document complet
                     full_doc = self.corpus_mapping.get(doc_id, {})
                     
-                    # ✅ Convertir distance en similarité (ChromaDB utilise L2 après normalisation)
+                    # Convertir distance en similarité
                     similarity = 1.0 / (1.0 + distance)
                     
                     results.append(SearchResult(
@@ -423,16 +578,15 @@ class ChromaVectorStore(BaseVectorStore):
                         rank=rank
                     ))
             
-            logger.info(f"🔍 [SEARCH] Recherche: {len(results)} résultats en {elapsed*1000:.1f}ms")
+            logger.info(f"[SEARCH] Recherche: {len(results)} résultats en {elapsed*1000:.1f}ms")
             
             return results
             
         except Exception as e:
-            logger.error(f"❌ [ERROR] Erreur recherche: {e}")
+            logger.error(f"[ERROR] Erreur recherche: {e}")
             import traceback
             traceback.print_exc()
             return []
-
 
     def save(self, metadata_file: str = "corpus_mapping.pkl") -> bool:
         """
@@ -445,18 +599,29 @@ class ChromaVectorStore(BaseVectorStore):
             bool: True si succès
         """
         try:
+            # ✅ S'assurer que persist_directory est un Path
+            if not isinstance(self.persist_directory, Path):
+                self.persist_directory = Path(self.persist_directory)
+            
             mapping_path = self.persist_directory / metadata_file
             
-            with open(mapping_path, 'wb') as f:
-                pickle.dump(self.corpus_mapping, f)
+            # ✅ Sauvegarder à la fois corpus et mapping
+            save_data = {
+                #'corpus': self.corpus,
+                'corpus_mapping': self.corpus_mapping,
+                'embedding_dimension': self.embedding_dimension,
+                'document_count': self.document_count
+            }
             
-            logger.info(f" Corpus mapping sauvegardé: {mapping_path}")
+            with open(mapping_path, 'wb') as f:
+                pickle.dump(save_data, f)
+            
+            logger.info(f"[SAVE] Corpus mapping sauvegardé: {mapping_path}")
             return True
             
         except Exception as e:
             logger.error(f"[ERROR] Erreur sauvegarde: {e}")
             return False
-    
     
     def load(self, collection_name: str = DEFAULT_COLLECTION_NAME,
              metadata_file: str = "corpus_mapping.pkl") -> bool:
@@ -473,66 +638,151 @@ class ChromaVectorStore(BaseVectorStore):
         try:
             logger.info("[LOAD] Chargement index ChromaDB...")
             
-            # Initialiser client (utiliser le registre pour éviter les instances multiples)
-            settings = Settings(
-                anonymized_telemetry=False,
-                is_persistent=True
-            )
-            self.client = _get_chroma_client(str(self.persist_directory), settings)
+            # ✅ S'assurer que persist_directory est un Path
+            if not isinstance(self.persist_directory, Path):
+                self.persist_directory = Path(self.persist_directory)
             
-            # Charger collection
-            self.collection = self.client.get_collection(collection_name)
-            self.document_count = self.collection.count()
+            # ✅ Réutiliser client existant si disponible
+            if self.client is not None:
+                logger.debug("[REUSE] Réutilisation client ChromaDB existant de l'instance")
+            else:
+                # Initialiser client avec paramètres minimaux (sans allow_reset pour compatibilité)
+                # Utiliser les mêmes paramètres minimaux que pour éviter les conflits
+                settings = self._get_chroma_settings(allow_reset=False)
+                self.client = _get_chroma_client(str(self.persist_directory), settings)
+
+            # Charger collection (avec gestion d'erreur si elle n'existe pas)
+            try:
+                self.collection = self.client.get_collection(collection_name)
+                self.document_count = self.collection.count()
+            except Exception as e:
+                error_msg = str(e).lower()
+                if "does not exist" in error_msg or "not found" in error_msg:
+                    # ✅ Essayer avec l'autre nom de collection possible (compatibilité)
+                    alternative_names = ["agricultural_corpus", "agriculture_burkina"]
+                    if collection_name not in alternative_names:
+                        alternative_names.insert(0, collection_name)
+                    
+                    logger.warning(f"[WARNING] Collection '{collection_name}' introuvable, recherche alternatives...")
+                    available_collections = [c.name for c in self.client.list_collections()]
+                    logger.info(f"[INFO] Collections disponibles: {available_collections}")
+                    
+                    # Essayer les noms alternatifs
+                    collection_found = False
+                    for alt_name in alternative_names:
+                        if alt_name in available_collections:
+                            logger.info(f"[SUCCESS] Collection trouvée avec nom alternatif: '{alt_name}'")
+                            self.collection = self.client.get_collection(alt_name)
+                            self.document_count = self.collection.count()
+                            collection_found = True
+                            break
+                    
+                    if not collection_found:
+                        logger.error(f"[ERROR] Aucune collection trouvée parmi: {alternative_names}")
+                        logger.error(f"[ERROR] Collections disponibles: {available_collections}")
+                        raise ValueError(f"Collection '{collection_name}' n'existe pas. Créer l'index d'abord avec create_index().")
+                else:
+                    raise
             
             # Charger corpus mapping
             mapping_path = self.persist_directory / metadata_file
             if mapping_path.exists():
                 with open(mapping_path, 'rb') as f:
-                    self.corpus_mapping = pickle.load(f)
-                logger.info(f"[SUCCESS] Corpus mapping chargé: {len(self.corpus_mapping)} documents")
-            else:
-                logger.warning("[WARNING] Fichier corpus mapping introuvable, mapping vide")
-            
-            # Récupérer dimension depuis métadonnées (avec fallback robuste)
-            metadata = self.collection.metadata or {}
-            dim_value = metadata.get('embedding_dimension')
-            if dim_value is not None:
-                try:
-                    self.embedding_dimension = int(dim_value)
-                except Exception:
-                    self.embedding_dimension = None
-            
-            if self.embedding_dimension is None:
-                model_meta = (metadata.get('model') or '').lower()
-                if 'minilm' in model_meta or '384' in model_meta:
-                    self.embedding_dimension = 384
-                elif 'labse' in model_meta or '768' in model_meta:
-                    self.embedding_dimension = 768
+                    save_data = pickle.load(f)
+                
+                # Nouveau format
+                if isinstance(save_data, dict) and 'corpus_mapping' in save_data:
+                    self.corpus_mapping = save_data['corpus_mapping']
+                    self.embedding_dimension = save_data.get('embedding_dimension')
+                    self.document_count = save_data.get('document_count', len(self.corpus_mapping))
+                    logger.info(f"[SUCCESS] Corpus chargé: {self.document_count} documents")
                 else:
-                    # Par défaut raisonnable (MiniLM 384D)
-                    self.embedding_dimension = 384
+                    # Support ancien format (rétrocompatibilité)
+                    if 'corpus' in save_data and 'corpus_mapping' in save_data:
+                        logger.warning("[MIGRATION] Ancien format détecté, migration vers corpus_mapping")
+                        self.corpus_mapping = save_data['corpus_mapping']
+                    elif isinstance(save_data, dict):
+                        # Très ancien format : juste le mapping
+                        self.corpus_mapping = save_data
+                    
+                    self.document_count = len(self.corpus_mapping)
+                
+                logger.info(f"[SUCCESS] Corpus chargé: {len(self.corpus_mapping)} documents")
+            else:
+                logger.warning("[WARNING] Fichier corpus mapping introuvable")
             
-            logger.info(f"[SUCCESS] Index chargé: {self.document_count} documents, dim={self.embedding_dimension}")
+            # Récupérer dimension depuis métadonnées
+            # Récupérer dimension depuis métadonnées (OBLIGATOIRE)
+            if self.embedding_dimension is None:
+                metadata = self.collection.metadata or {}
+                dim_value = metadata.get('embedding_dimension')
+                
+                if dim_value is not None:
+                    try:
+                        self.embedding_dimension = int(dim_value)
+                        logger.info(f"✅ Dimension chargée depuis métadonnées: {self.embedding_dimension}")
+                    except ValueError as e:
+                        logger.error(f"❌ Dimension invalide dans métadonnées: {dim_value}")
+                
+                # Fallback sur modèle (avec avertissement)
+                if self.embedding_dimension is None:
+                    model_meta = (metadata.get('model') or '').lower()
+                    if 'minilm' in model_meta or '384' in model_meta:
+                        self.embedding_dimension = 384
+                    elif 'labse' in model_meta or '768' in model_meta:
+                        self.embedding_dimension = 768
+                    else:
+                        # ❌ Ne pas deviner silencieusement
+                        logger.error("❌ Impossible de déterminer embedding_dimension")
+                        logger.error(f"   Métadonnées disponibles: {metadata}")
+                        raise ValueError(
+                            "Dimension embeddings inconnue. "
+                            "Vérifiez que la collection a été créée correctement avec create_index()."
+                        )
+                    
+                    logger.warning(f"⚠️ Dimension déduite du modèle: {self.embedding_dimension}")
+
+            logger.info(f"[SUCCESS] Index chargé: {self.document_count} docs, dim={self.embedding_dimension}")
             
             return True
             
         except Exception as e:
             logger.error(f"[ERROR] Erreur chargement: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def get_statistics(self) -> Dict[str, Any]:
-        """Statistiques sur le vector store"""
-        if not self.collection:
-            return {"error": "Index non chargé"}
+        """
+        ✅ CORRIGÉ : Statistiques complètes sur le vector store
         
-        return {
-            "collection_name": self.collection.name,
-            "total_documents": self.document_count,
-            "embedding_dimension": self.embedding_dimension,
-            "metadata": self.collection.metadata,
-            "corpus_mapping_size": len(self.corpus_mapping)
-        }
-
+        Returns:
+            Dict avec toutes les stats nécessaires
+        """
+        try:
+            if not self.collection:
+                return {
+                    "total_documents": 0,
+                    "embedding_dimension": self.embedding_dimension or 0,
+                    "error": "Index non chargé"
+                }
+            
+            return {
+                "collection_name": self.collection.name,
+                "total_documents": self.document_count,
+                "embedding_dimension": self.embedding_dimension or 384,  # ✅ Avec fallback
+                "corpus_size": len(self.corpus_mapping),  # ✅ AJOUTÉ
+                "corpus_mapping_size": len(self.corpus_mapping),
+                "metadata": self.collection.metadata,
+                "is_loaded": True
+            }
+        except Exception as e:
+            logger.error(f"[ERROR] get_statistics: {e}")
+            return {
+                "total_documents": 0,
+                "embedding_dimension": 0,
+                "error": str(e)
+            }
 
 # ============================================================================
 # IMPLÉMENTATION 2 : FAISS (Recommandé pour production)
