@@ -4,7 +4,6 @@ import json
 from datetime import datetime
 import logging
 from typing import Tuple
-from urllib.parse import urlparse
 import sys
 
 # ==================== CONFIGURATION ==================== #
@@ -14,13 +13,12 @@ API_BASE_URL = "http://localhost:8000"
 API_TIMEOUT = 600
 
 # Configuration logging
-
 logging.basicConfig(
     level=logging.INFO,
     handlers=[logging.StreamHandler(sys.stdout)],
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
-sys.stdout.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding="utf-8")
 
 logger = logging.getLogger(__name__)
 
@@ -203,6 +201,33 @@ html, body {
     border: 1px solid #e0e0e0;
 }
 
+/* ===== SPINNER DE CHARGEMENT ===== */
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #e8f5e9;
+    border-radius: 8px;
+    border-left: 4px solid #558b2f;
+    margin: 10px 0;
+}
+
+.spinner-icon {
+    font-size: 24px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spinner-text {
+    color: #2d5016;
+    font-weight: 500;
+}
+
 /* ===== SOURCES ===== */
 .sources-container {
     background: #f5f5f5;
@@ -233,27 +258,6 @@ html, body {
     margin-bottom: 6px;
 }
 
-.pertinence-bar {
-    background: #f0f0f0;
-    height: 4px;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.pertinence-fill {
-    background: linear-gradient(90deg, #558b2f 0%, #7cb342 100%);
-    height: 100%;
-}
-
-.metadata-info {
-    font-size: 0.8em;
-    color: #999;
-    margin-top: 8px;
-    padding: 8px;
-    background: #fafafa;
-    border-radius: 4px;
-}
-
 /* ===== CHAMP DE SAISIE ===== */
 #input-zone {
     display: flex;
@@ -268,9 +272,9 @@ html, body {
 .input-wrapper {
     display: flex;
     align-items: stretch;
-    width: 95%;         /* prend presque toute la largeur */
-    max-width: 1200px;  /* plus large sur grand écran */
-    min-width: 600px;   /* plus large sur petit écran */
+    width: 95%;
+    max-width: 1200px;
+    min-width: 600px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -281,11 +285,10 @@ html, body {
     border: none !important;
     padding: 14px 18px !important;
     font-size: 1rem !important;
-    width: 100% !important;  /* prend tout l'espace restant */
+    width: 100% !important;
     resize: none !important;
     min-height: 50px !important;
 }
-
 
 .btn-send {
     background: linear-gradient(135deg, #2d5016 0%, #558b2f 100%);
@@ -301,6 +304,12 @@ html, body {
 
 .btn-send:hover {
     background: #33691e;
+}
+
+/* ===== MASQUER LA MINUTERIE GRADIO ===== */
+.eta-bar, .progress-bar, .generating {
+    display: none !important;
+    visibility: hidden !important;
 }
 
 /* ===== FOOTER ===== */
@@ -334,22 +343,52 @@ function setupHistoryClickHandlers() {
     });
 }
 
+// Masquer les barres de progression Gradio
+function hideProgressBars() {
+    const selectors = [
+        '.eta-bar',
+        '.progress-bar', 
+        '.generating',
+        '[class*="progress"]',
+        '[class*="eta"]'
+    ];
+    
+    selectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            el.style.display = 'none';
+        });
+    });
+}
+
 // Configuration initiale
 window.addEventListener('load', () => {
     scrollToBottom();
     setupHistoryClickHandlers();
+    hideProgressBars();
 });
 
-// Observer pour les mises à jour dynamiques
-const observer = new MutationObserver(() => {
+// Observer pour masquer les barres de progression
+const progressObserver = new MutationObserver(() => {
+    hideProgressBars();
+});
+
+// Observer pour les clics historique
+const historyObserver = new MutationObserver(() => {
     setupHistoryClickHandlers();
 });
 
-// Démarrer l'observation des changements dans le DOM
+// Démarrer les observations
 window.addEventListener('load', () => {
+    // Observer le body pour les barres de progression
+    progressObserver.observe(document.body, { 
+        childList: true, 
+        subtree: true 
+    });
+    
+    // Observer l'historique
     const historyList = document.querySelector('.history-list');
     if (historyList) {
-        observer.observe(historyList, { 
+        historyObserver.observe(historyList, { 
             childList: true, 
             subtree: true 
         });
@@ -385,9 +424,7 @@ class ConversationManager:
         current_conv["messages"].append({"role": "user", "content": message})
         current_conv["messages"].append({"role": "assistant", "content": response})
 
-        # Mettre à jour le titre avec la première question si c'est la première
         if len(current_conv["messages"]) == 2:
-            # Nettoyer le titre pour gr.Radio (pas de retour à la ligne, pas de HTML)
             clean_title = message.replace("\n", " ").replace("\r", " ")
             clean_title = (
                 clean_title[:30] + "..." if len(clean_title) > 30 else clean_title
@@ -403,22 +440,6 @@ class ConversationManager:
 
     def get_all_conversations(self) -> list:
         return self.conversations
-
-    def build_history_html(self) -> str:
-        if not self.conversations:
-            return '<div class="history-list">Aucune conversation</div>'
-
-        html = '<div class="history-list">'
-        for conv in reversed(self.conversations):  # Plus récent en premier
-            active_class = "active" if conv["id"] == self.current_id else ""
-            html += f"""
-            <div class="history-item {active_class}" id="history-{conv["id"]}">
-                <div class="history-title">{conv["title"]}</div>
-                <div class="history-date">{conv["date"]}</div>
-            </div>
-            """
-        html += "</div>"
-        return html
 
 
 conversation_manager = ConversationManager()
@@ -463,7 +484,7 @@ api_client = AgroConsollingAPIClient()
 
 def format_response_with_sources(api_response: dict) -> str:
     if not api_response.get("success", False):
-        return f"""<div class=\"error-message\"><strong>❌ Erreur:</strong> {api_response.get("error", "Erreur inconnue")}<br/><small>{api_response.get("details", "")}</small></div>"""
+        return f"""<div class="error-message"><strong>❌ Erreur:</strong> {api_response.get("error", "Erreur inconnue")}<br/><small>{api_response.get("details", "")}</small></div>"""
 
     # Réponse principale
     html = f"""<div class="message-content assistant-message" 
@@ -471,33 +492,50 @@ def format_response_with_sources(api_response: dict) -> str:
                 {api_response.get("reponse", "Aucune réponse disponible.")}
             </div>"""
 
-    # ======= Affichage des sources =======
+    # Sources
     sources = api_response.get("sources", [])
     if sources:
         html += '<div class="sources-container"><strong>📚 Sources utilisées :</strong>'
         for i, source in enumerate(sources, 1):
-            texte = source.get("text", "").strip()
-            url = source.get("source_url", "#")
-            nom_fichier = source.get("source", "").replace(".pdf", "").strip()
-            nom_site = urlparse(url).netloc or "Lien inconnu"
+            source_url = source.get("source_url") or source.get("url", "#")
+            organisme = (
+                source.get("source_institution")
+                or source.get("organisme")
+                or "Source inconnue"
+            )
 
             html += f"""
             <div class="source-item">
-                <div class="source-title">🔗 Source {i} : 
-                    <a href="{url}" target="_blank" style="color:#2d5016;text-decoration:none;">{nom_site}</a>
+                <div class="source-title">
+                    <strong>🔗 {organisme}</strong>
                 </div>
-                <div class="source-org">{nom_fichier}</div>
-                <div class="source-text">{texte}</div>
             </div>"""
         html += "</div>"
     return html
+
+
+def show_loading_spinner() -> str:
+    """Affiche le spinner de chargement"""
+    return """
+    <div class="loading-spinner">
+        <div class="spinner-icon">🌾</div>
+        <div class="spinner-text">Génération de la réponse en cours...</div>
+    </div>
+    """
 
 
 def process_chat_message(message: str, history: list) -> Tuple[str, list, str]:
     if not message.strip():
         return "", history, ""
 
+    # Ajouter le message utilisateur
     history.append({"role": "user", "content": message})
+
+    # Afficher le spinner pendant le traitement
+    temp_html = build_chat_html(history) + show_loading_spinner()
+    yield temp_html, history, ""
+
+    # Appeler l'API
     api_response = api_client.ask_question(message)
     formatted_response = format_response_with_sources(api_response)
     history.append({"role": "assistant", "content": formatted_response})
@@ -505,7 +543,8 @@ def process_chat_message(message: str, history: list) -> Tuple[str, list, str]:
     # Mettre à jour l'historique
     conversation_manager.add_message(message, formatted_response)
 
-    return build_chat_html(history), history, ""
+    # Retourner la réponse finale
+    yield build_chat_html(history), history, ""
 
 
 def build_chat_html(history: list) -> str:
@@ -523,7 +562,7 @@ def build_chat_html(history: list) -> str:
 def new_conversation() -> Tuple[str, list, str]:
     conversation_manager.create_conversation()
     return (
-        """<div class=\"empty-state\"><div class=\"empty-state-icon\">🌾</div><div class=\"empty-state-text\">Nouvelle conversation créée</div><p style=\"color:#ccc;margin-top:10px;\">Posez votre première question</p></div>""",
+        """<div class="empty-state"><div class="empty-state-icon">🌾</div><div class="empty-state-text">Nouvelle conversation créée</div><p style="color:#ccc;margin-top:10px;">Posez votre première question</p></div>""",
         [],
         gr.update(choices=get_radio_choices(), value=None),
     )
@@ -531,6 +570,15 @@ def new_conversation() -> Tuple[str, list, str]:
 
 def get_radio_choices():
     return [conv["title"] for conv in conversation_manager.get_all_conversations()]
+
+
+def switch_conversation(selected_title):
+    for conv in conversation_manager.get_all_conversations():
+        if conv["title"] == selected_title:
+            conversation_manager.current_id = conv["id"]
+            history = conv["messages"]
+            return build_chat_html(history), history
+    return None, None
 
 
 # ==================== INTERFACE GRADIO ==================== #
@@ -569,11 +617,11 @@ with gr.Blocks(title=TITRE, css=CSS_CUSTOM + JS_CUSTOM, theme=gr.themes.Soft()) 
                 elem_classes="chat-messages",
             )
 
-            # ==== ZONE DE SAISIE CENTRÉE AVEC BOUTON COLLÉ ====
+            # Zone de saisie
             with gr.Group(elem_id="input-zone"):
                 with gr.Row(elem_classes="input-wrapper"):
                     msg_input = gr.Textbox(
-                        placeholder="Posez un question sur l'agriculture...",
+                        placeholder="Posez une question sur l'agriculture...",
                         show_label=False,
                         lines=1,
                         max_lines=4,
@@ -586,33 +634,24 @@ with gr.Blocks(title=TITRE, css=CSS_CUSTOM + JS_CUSTOM, theme=gr.themes.Soft()) 
     def toggle_send_btn(message):
         return gr.update(visible=bool(message.strip()))
 
-    def handle_send(message, history):
-        chat_html, new_history, _ = process_chat_message(message, history)
-        return chat_html, new_history, "", gr.update(choices=get_radio_choices())
-
-    def switch_conversation(selected_title):
-        # Trouver l'ID de la conversation par le titre
-        for conv in conversation_manager.get_all_conversations():
-            if conv["title"] == selected_title:
-                conversation_manager.current_id = conv["id"]
-                history = conv["messages"]
-                return build_chat_html(history), history
-        return None, None
-
     msg_input.change(fn=toggle_send_btn, inputs=[msg_input], outputs=[btn_send])
+
     msg_input.submit(
-        fn=handle_send,
+        fn=process_chat_message,
         inputs=[msg_input, chat_history],
-        outputs=[chat_display, chat_history, msg_input, radio_history],
-    )
+        outputs=[chat_display, chat_history, msg_input],
+    ).then(fn=lambda: gr.update(choices=get_radio_choices()), outputs=[radio_history])
+
     btn_send.click(
-        fn=handle_send,
+        fn=process_chat_message,
         inputs=[msg_input, chat_history],
-        outputs=[chat_display, chat_history, msg_input, radio_history],
-    )
+        outputs=[chat_display, chat_history, msg_input],
+    ).then(fn=lambda: gr.update(choices=get_radio_choices()), outputs=[radio_history])
+
     btn_new.click(
         fn=new_conversation, outputs=[chat_display, chat_history, radio_history]
     )
+
     radio_history.change(
         fn=switch_conversation,
         inputs=[radio_history],
