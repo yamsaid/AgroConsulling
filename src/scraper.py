@@ -386,19 +386,56 @@ class PDFProcessor:
         # Suppression caractères nuls et contrôle
         text = re.sub(r"[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]", "", text)
 
-        # Normalisation des espaces
-        text = re.sub(r"\n+", "\n", text)
-        text = re.sub(r" +", " ", text)
-        text = re.sub(r"\t+", " ", text)
-
-        # Césures de mots
-        text = re.sub(r"(\w+)-\s*\n\s*(\w+)", r"\1\2", text)
-
-        # Suppression patterns non désirés
-        text = re.sub(r"\[[^\]]*\]", "", text)
-        text = re.sub(r"\{[^\}]*\}", "", text)
-
-        return text.strip()
+        # Nettoyage en plusieurs passes
+        cleaning_steps = [
+            # 1. Nettoyage des artefacts d'extraction
+            (r'---\s*Page\s*\d+\s*---', ''),
+            (r'...\s*Page\s*\d+\s*...', ''),
+            (r'---+\s*--+', ''),
+            (r'_{3,}', ''),
+            (r'\*{3,}', ''),
+            
+            # 2. Nettoyage des séparateurs de ligne
+            (r'\n+', ' '),
+            (r'\r+', ' '),
+            (r'\t+', ' '),
+            
+            # 3. Correction des césures
+            (r'(\w+)-\s+(\w+)', r'\1\2'),
+            
+            # 4. Nettoyage des caractères indésirables
+            (r'[^\w\s.,;:!?()\-–—«»°%€$@/\\+*=&]', ''),
+            
+            # 5. Nettoyage des numéros de page
+            (r'\bPage\s+\d+\b', ''),
+            (r'\b\d+\s*/\s*\d+\b', ''),
+            (r'\bvol\.?\s*\d+\b', '', re.IGNORECASE),
+            (r'\bno\.?\s*\d+\b', '', re.IGNORECASE),
+            
+            # 6. Normalisation des espaces
+            (r'\s+', ' '),
+            
+            # 7. Correction ponctuation
+            (r'\s+([.,;:!?)])', r'\1'),
+            (r'([(])\s+', r'\1'),
+            (r'\s+–\s+', ' – '),  # Garde les tirets cadratins espacés
+            (r'\s+-\s+', ' - '),  # Garde les traits d'union espacés
+        ]
+        
+        cleaned_text = text
+        for step in cleaning_steps:
+            if len(step) == 3:
+                # Tuple avec flags: (pattern, replacement, flags)
+                pattern, replacement, flags = step
+                cleaned_text = re.sub(pattern, replacement, cleaned_text, flags=flags)
+            elif len(step) == 2:
+                # Tuple sans flags: (pattern, replacement)
+                pattern, replacement = step
+                cleaned_text = re.sub(pattern, replacement, cleaned_text)
+            else:
+                logger.warning(f"Étape de nettoyage invalide ignorée: {step}")
+        
+        return cleaned_text.strip()
 
     def process_single_pdf(
         self, pdf_path: str, source_id: str, source_institution: str
@@ -1112,7 +1149,7 @@ def main():
     OUTPUT_FOLDER = "./data/processed"
     CSV_INPUT = "./data/source.csv"  # Fichier CSV avec URLs à traiter
     SOURCES_CSV = "./data/source.csv"  # Fichier CSV avec mapping des sources
-    CORPUS_OUTPUT = "./data/corpus_dearty.json"
+    CORPUS_OUTPUT = "./data/corpus.json"
 
     # Création dossiers
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
@@ -1170,5 +1207,4 @@ def main():
 
 
 if __name__ == "__main__":
-    #main()
-    clean_corpus.clean_existing_corpus("./data/corpus_dearty.json", "./data/corpus_dearty_cleaned.json")
+    main()
