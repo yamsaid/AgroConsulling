@@ -493,24 +493,15 @@ Ensemble, construisons un assistant agricole intelligent, accessible et souverai
 
 <td align="center">
 
-<b>SANOU Ange Noëlie</b><br/> <sub>Data Scientist</sub>
-
-<td align="center">
-
-<b>YAMEOGO Saïdou</b><br/> <sub>Data Scientist</sub><br/> <a href="https://github.com/angesanou"> <img src="https://img.shields.io/badge/GitHub-Sanou-181717?style=flat-square&logo=github"/> </a>
+<b>SANOU Ange Noëlie</b><br/> <sub>Data Scientist</sub><br/> <a href="https://github.com/angesanou"> <img src="https://img.shields.io/badge/GitHub-Sanou-181717?style=flat-square&logo=github"/> </a>
 
 </td>
 
 <td align="center">
 
-<b>NIAMPA Abdoul Fataho</b><br/> <sub>Data Scientist</sub>
-
-<td align="center">
-
-<b>YAMEOGO Saïdou</b><br/> <sub>Data Scientist</sub><br/> <a href="https://github.com/niampa-abdoulfataho"> <img src="https://img.shields.io/badge/GitHub-Fatah-181717?style=flat-square&logo=github"/> </a>
+<b>NIAMPA Abdoul Fatah</b><br/> <sub>Data Scientist</sub><br/> <a href="https://github.com/niampa-abdoulfataho"> <img src="https://img.shields.io/badge/GitHub-Fatah-181717?style=flat-square&logo=github"/> </a>
 
 </td>
-
 </tr>
 
 </table>
