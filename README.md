@@ -15,6 +15,16 @@ date: "2025-11-04"
 ## Technologies open source utilisées (avec liens vers licences) 
 ## Instructions installation 
 ## Résultats évaluation
+![alt text](<WhatsApp Image 2025-11-05 à 22.49.41_1c24589a.jpg>)
+
+
+# Plan
+
+## Sujet choisi et justification 
+## Architecture technique 
+## Technologies open source utilisées (avec liens vers licences) 
+## Instructions installation 
+## Résultats évaluation
 
 
 
@@ -32,7 +42,9 @@ _(juste en dessous des badges sympatiques à placer)_
 
 
 ## Description du projet (Contexte et justification)
+## Description du projet (Contexte et justification)
 
+Au Burkina Faso, l’agriculture constitue le principal moteur économique et social, occupant près de 86 % de la population active en 2025. Toutefois, les petits exploitants, particulièrement dans les zones périurbaines, rencontrent une difficulté majeure : le manque d’accès à une information technique, fiable et disponible à temps. Cette lacune, qu’elle concerne les pratiques culturales, la gestion des ravageurs, l’adaptation climatique ou les données de marché, limite fortement la productivité et les revenus agricoles.
 Au Burkina Faso, l’agriculture constitue le principal moteur économique et social, occupant près de 86 % de la population active en 2025. Toutefois, les petits exploitants, particulièrement dans les zones périurbaines, rencontrent une difficulté majeure : le manque d’accès à une information technique, fiable et disponible à temps. Cette lacune, qu’elle concerne les pratiques culturales, la gestion des ravageurs, l’adaptation climatique ou les données de marché, limite fortement la productivité et les revenus agricoles.
 
 **AgroConsolling** est une solution numérique innovante développée pour pallier ce déficit d’information. Il s’agit d’un **assistant virtuel intelligent** qui accompagne les agriculteurs, les techniciens et les étudiants du secteur dans leurs prises de décision. En quelques interactions, l’utilisateur peut obtenir des **recommandations adaptées à son contexte** sur la gestion des cultures, l’irrigation, la protection phytosanitaire, les pratiques durables ou encore la planification saisonnière.
@@ -41,10 +53,12 @@ AgroConsolling vise ainsi à permettre à tout acteur agricole — débutant ou 
 Son ambition : **rendre l’agriculture plus intelligente, plus résiliente et plus rentable au Burkina Faso.**
 
 
+
 ## Prerequis pour commencer l'exécution du programme:
 
 
 
+"Ce qu'il est requis pour commencer avec Notre projet :"
 "Ce qu'il est requis pour commencer avec Notre projet :"
 
 Python 3.8+ - Langage de programmation principal
@@ -62,7 +76,9 @@ Git - Pour le contrôle de version
 Les étapes pour installer votre programme :
 
 **1.Cloner le repository**
+**1.Cloner le repository**
 
+```{py}
 ```{py}
 
 git clone https://github.com/yamsaid/AgroConsulling.git
@@ -81,7 +97,19 @@ source <nom de l'environnement>\Scripts\activate
 
 
 **2.Installer les dépendances Python**
+Créer un environnement virtuel et l'activer
 
+```{py}
+python -m venv <nom de l'environnement>
+```
+```{py}
+source <nom de l'environnement>\Scripts\activate
+```
+
+
+**2.Installer les dépendances Python**
+
+```{py}
 ```{py}
 
 pip install -r requirements.txt
@@ -90,10 +118,15 @@ pip install -r requirements.txt
 
 
 **3.Installer Ollama**
+**3.Installer Ollama**
 
 # Sur Linux/Mac
 curl -fsSL https://ollama.com/install.sh | sh
 
+# Sur Windows, téléchargez l'installateur 
+
+
+https://ollama.com
 # Sur Windows, téléchargez l'installateur 
 
 
@@ -104,17 +137,25 @@ https://ollama.com
 ollama pull llama3.2:3b
 
 **5.Télécharger le modèle Mistral**
+**4.Télécharger le modèle llama3.2:3b**
+
+ollama pull llama3.2:3b
+
+**5.Télécharger le modèle Mistral**
 
 ollama pull mistral
 
 **6.Vérifier l'installation**
+**6.Vérifier l'installation**
 
+```{py}
 ```{py}
 
 ollama run mistral "Bonjour, test en français"
 
 ```
 
+## Architecture Technique
 ## Architecture Technique
 
  Composants Principaux
@@ -135,8 +176,14 @@ Design adapté mobile pour agriculteurs
 
 2. Backend API
 
+
+![alt text](<WhatsApp Image 2025-11-05 à 23.30.28_eaf8affd.jpg>)
+
+2. Backend API
+
 Framework : FastAPI
 
+Localisation : src/api.py
 Localisation : src/api.py
 
 Endpoints :
@@ -149,12 +196,15 @@ GET /sources - Liste des documents disponibles
 
 
 
+
+
 Responsabilités :
 
 Intégration pipeline RAG complet
 
 Gestion des embeddings et recherche vectorielle
 
+Appel au modèle llama3.2:3b pour génération et Mistral comme alternative
 Appel au modèle llama3.2:3b pour génération et Mistral comme alternative
 
 3. Moteur RAG (Cœur du Système)
@@ -166,11 +216,15 @@ Composants :
 Embeddings : src/embeddings.py (SentenceTransformers)
 
 Base Vectorielle : src/vector_store.py (Chroma et FAISS en alternative)
+Base Vectorielle : src/vector_store.py (Chroma et FAISS en alternative)
 
+LLM : src/llm_handler.py (llama3.2:3b)
 LLM : src/llm_handler.py (llama3.2:3b)
 
 Schéma réprsentatif du fonctionnement du chatbot
+Schéma réprsentatif du fonctionnement du chatbot
 
+![alt text](image.png)
 ![alt text](image.png)
 
 4. Gestion des Données Agricoles
@@ -180,6 +234,7 @@ Fichiers :
 
 corpus.json - Documents techniques agriculture BF
 
+sources.txt - Références des sources
 sources.txt - Références des sources
 
 
@@ -215,19 +270,44 @@ python frontend/app.py
 ## Les technologies utilisées
 
 numpy : https://github.com/numpy/numpy/blob/main/LICENSE.txt - library pour le traitement des données
+**Lancer le serveur uvicorn**
+```{py}
+uvicorn src.api:app 
+```
+ou 
+```{py}
+python -m uvicorn src.api:app
+```
+**Lancer l'application (l'interface)**
+```{py}
+python frontend/app.py
+```
 
+## Les technologies utilisées
+
+numpy : https://github.com/numpy/numpy/blob/main/LICENSE.txt - library pour le traitement des données
+
+Sentence Transformers : https://github.com/UKPLab/sentence-transformers - Génération d'embeddings multilingues
 Sentence Transformers : https://github.com/UKPLab/sentence-transformers - Génération d'embeddings multilingues
 
 FAISS : https://github.com/facebookresearch/faiss?tab=MIT-1-ov-file# - Base de données vectorielle
+FAISS : https://github.com/facebookresearch/faiss?tab=MIT-1-ov-file# - Base de données vectorielle
 
+Mistral 7B : https://github.com/ollama/ollama-python?tab=MIT-1-ov-file# - Modèle de langage open source
 Mistral 7B : https://github.com/ollama/ollama-python?tab=MIT-1-ov-file# - Modèle de langage open source
 
 Gradio : https://github.com/gradio-app/gradio?tab=Apache-2.0-1-ov-file# - Interface utilisateur
+Gradio : https://github.com/gradio-app/gradio?tab=Apache-2.0-1-ov-file# - Interface utilisateur
 
+FastAPI : https://github.com/fastapi/fastapi?tab=MIT-1-ov-file# - Framework API moderne
 FastAPI : https://github.com/fastapi/fastapi?tab=MIT-1-ov-file# - Framework API moderne
 
 Ollama : https://github.com/ollama/ollama-python?tab=MIT-1-ov-file# - Plateforme d'exécution de modèles LLM
+Ollama : https://github.com/ollama/ollama-python?tab=MIT-1-ov-file# - Plateforme d'exécution de modèles LLM
 
+Python 3.8+ : https://python.org/ - Langage de programmation principal
+
+uvicorn : https://github.com/Kludex/uvicorn?tab=BSD-3-Clause-1-ov-file
 Python 3.8+ : https://python.org/ - Langage de programmation principal
 
 uvicorn : https://github.com/Kludex/uvicorn?tab=BSD-3-Clause-1-ov-file
@@ -260,9 +340,16 @@ YAMEOGO Saïdou - Data scientist
 
 SANOU Ange Noëlie - Data scientist
 
+YAMEOGO Saïdou - Data scientist
+
+SANOU Ange Noëlie - Data scientist
+
+NIAMPA Abdoul Fataho - Data scientist
 NIAMPA Abdoul Fataho - Data scientist
 
 📄 Licence
+
+Ce projet est sous licence MIT - voir le fichier [LICENSE](!LICENCE) pour plus d'informations.
 
 Ce projet est sous licence MIT - voir le fichier [LICENSE](!LICENCE) pour plus d'informations.
 
