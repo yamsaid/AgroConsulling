@@ -1,355 +1,420 @@
----
-title: "README"
-output: html_document
-date: "2025-11-04"
----
+![header](https://capsule-render.vercel.app/api?type=cylinder&color=0:0f766e,100:065f46&height=180&text=AgroConsulling&fontSize=30&fontColor=ffffff&desc=Assistant%20IA%20Agricole%20pour%20le%20Burkina%20Faso%20|%20Hackathon%20IA%202025&descSize=15&descAlignY=75)
 
+<p align="center">
 
-![alt text](<WhatsApp Image 2025-11-05 à 22.49.41_1c24589a.jpg>)
+<img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 
+<img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
 
-# Plan
+<img src="https://img.shields.io/badge/Gradio-Frontend-FF6F00?style=for-the-badge&logo=gradio&logoColor=white"/>
 
-## Sujet choisi et justification 
-## Architecture technique 
-## Technologies open source utilisées (avec liens vers licences) 
-## Instructions installation 
-## Résultats évaluation
-![alt text](<WhatsApp Image 2025-11-05 à 22.49.41_1c24589a.jpg>)
+<img src="https://img.shields.io/badge/RAG-Retrieval%20Augmented%20Generation-blueviolet?style=for-the-badge"/>
 
+<img src="https://img.shields.io/badge/Ollama-Local%20LLM-black?style=for-the-badge"/>
 
-# Plan
+<img src="https://img.shields.io/badge/Open%20Source-100%25-success?style=for-the-badge"/>
 
-## Sujet choisi et justification 
-## Architecture technique 
-## Technologies open source utilisées (avec liens vers licences) 
-## Instructions installation 
-## Résultats évaluation
+<img src="https://img.shields.io/badge/Burkina%20Faso-Agriculture-green?style=for-the-badge"/>
 
+</p>
 
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-# AgroConsolling - Assistant IA Agricole
-_(juste en dessous des badges sympatiques à placer)_
+<p align="center">
+<a href="#">
+<img src="https://img.shields.io/badge/🇫🇷%20Français-2d6a4f?style=for-the-badge"/>
+</a>
 
-# 🌱 AgriConseil-BF - Assistant IA pour l'Agriculture Burkinabè
+<a href="README_EN.md">
+<img src="https://img.shields.io/badge/🇬🇧%20English-1d3557?style=for-the-badge"/>
+</a>
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://opensource.org/)
-[![Made in Burkina Faso](https://img.shields.io/badge/Made%20in-Burkina%20Faso-green.svg)](https://en.wikipedia.org/wiki/Burkina_Faso)
-[![100% Open Source](https://img.shields.io/badge/Open%20Source-100%25-brightgreen.svg)]()
-[![AI Powered](https://img.shields.io/badge/AI-Powered-ff69b4.svg)]()
+# Résumé
 
+*AgroConsulling est un assistant conversationnel intelligent conçu pour démocratiser l'accès à l'information agricole au Burkina Faso. Basé sur une architecture Retrieval-Augmented Generation (RAG), il permet aux agriculteurs, techniciens, étudiants et décideurs d'obtenir des recommandations agricoles contextualisées, fiables et traçables à partir d'une base documentaire spécialisée.*
 
-## Description du projet (Contexte et justification)
-## Description du projet (Contexte et justification)
+*Le projet a été développé dans le cadre du Hackathon des Universités en Intelligence Artificielle avec l'objectif de démontrer qu'il est possible de construire une solution d'IA performante, souveraine et entièrement open source répondant aux besoins réels du monde agricole burkinabè.*
 
-Au Burkina Faso, l’agriculture constitue le principal moteur économique et social, occupant près de 86 % de la population active en 2025. Toutefois, les petits exploitants, particulièrement dans les zones périurbaines, rencontrent une difficulté majeure : le manque d’accès à une information technique, fiable et disponible à temps. Cette lacune, qu’elle concerne les pratiques culturales, la gestion des ravageurs, l’adaptation climatique ou les données de marché, limite fortement la productivité et les revenus agricoles.
-Au Burkina Faso, l’agriculture constitue le principal moteur économique et social, occupant près de 86 % de la population active en 2025. Toutefois, les petits exploitants, particulièrement dans les zones périurbaines, rencontrent une difficulté majeure : le manque d’accès à une information technique, fiable et disponible à temps. Cette lacune, qu’elle concerne les pratiques culturales, la gestion des ravageurs, l’adaptation climatique ou les données de marché, limite fortement la productivité et les revenus agricoles.
+### 🚀 Principaux résultats
 
-**AgroConsolling** est une solution numérique innovante développée pour pallier ce déficit d’information. Il s’agit d’un **assistant virtuel intelligent** qui accompagne les agriculteurs, les techniciens et les étudiants du secteur dans leurs prises de décision. En quelques interactions, l’utilisateur peut obtenir des **recommandations adaptées à son contexte** sur la gestion des cultures, l’irrigation, la protection phytosanitaire, les pratiques durables ou encore la planification saisonnière.
+✔ Plus de **500 documents agricoles** intégrés dans la base de connaissances
 
-AgroConsolling vise ainsi à permettre à tout acteur agricole — débutant ou expérimenté — d’élaborer et de simuler un projet complet : besoins en intrants, surfaces, investissements, calendrier de production, rendement prévisionnel, stratégie de commercialisation et rentabilité estimée.
-Son ambition : **rendre l’agriculture plus intelligente, plus résiliente et plus rentable au Burkina Faso.**
+✔ Architecture **100 % Open Source**
 
+✔ Assistant IA spécialisé en agriculture burkinabè
 
+✔ Pipeline RAG complet avec recherche vectorielle
 
-## Prerequis pour commencer l'exécution du programme:
+✔ Réponses contextualisées avec citations des sources
 
+✔ Temps moyen de réponse inférieur à **2 secondes**
 
+✔ Interface web responsive adaptée aux appareils mobiles
 
-"Ce qu'il est requis pour commencer avec Notre projet :"
-"Ce qu'il est requis pour commencer avec Notre projet :"
+✔ Déploiement local sans dépendance à des services propriétaires
 
-Python 3.8+ - Langage de programmation principal
+**Compétences mobilisées :** Intelligence Artificielle, RAG, NLP, FastAPI, Gradio, Vector Search, Open Source AI, Data Engineering, Développement API.
 
-Ollama - Pour l exécution des modèles de langage localement
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-Git - Pour le contrôle de version
+# 📌 Contexte et justification
 
-8GB de RAM minimum - Pour l exécution du modèle Mistral
+L'agriculture représente le principal pilier économique du Burkina Faso et mobilise près de **86 % de la population active**. Malgré cette importance stratégique, les producteurs agricoles rencontrent de nombreuses difficultés liées à l'accès à une information technique fiable et actualisée.
 
-4GB d espace disque - Pour stocker les modèles et données
+Les connaissances agricoles existent sous diverses formes :
 
+- Guides techniques de la FAO
+- Rapports du Ministère de l'Agriculture
+- Publications de l'INSD
+- Études du CIRAD
+- Rapports de projets et ONG
 
-### Installation
-Les étapes pour installer votre programme :
+Cependant, ces ressources demeurent souvent dispersées, difficiles d'accès ou peu exploitables directement par les producteurs.
 
-**1.Cloner le repository**
-**1.Cloner le repository**
+> 💡 **Problématique**
+>
+> Comment permettre aux agriculteurs burkinabè d'accéder rapidement à des conseils agricoles fiables, contextualisés et basés sur des sources documentaires reconnues ?
 
-```{py}
-```{py}
+AgroConsulling répond à cette problématique grâce à un assistant conversationnel alimenté par l'intelligence artificielle et une base documentaire spécialisée.
 
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
+# 🎯 Objectifs
+
+### Objectif principal
+
+Démocratiser l'accès à l'information technique agricole grâce à un assistant IA spécialisé.
+
+### Objectifs spécifiques
+
+- Centraliser la documentation agricole de référence.
+- Faciliter l'accès aux connaissances agronomiques.
+- Fournir des recommandations contextualisées.
+- Promouvoir la souveraineté technologique grâce à l'open source.
+- Accompagner les producteurs dans leurs prises de décision.
+- Valoriser les données et connaissances agricoles nationales.
+- Développer une solution reproductible dans d'autres secteurs.
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
+# 🏗️ Architecture technique
+
+```text
+Question utilisateur
+        │
+        ▼
+ Interface Gradio
+        │
+        ▼
+ API FastAPI
+        │
+        ▼
+ Génération Embedding
+ Sentence Transformers
+        │
+        ▼
+ Recherche Vectorielle
+ ChromaDB / FAISS
+        │
+        ▼
+ Documents pertinents
+        │
+        ▼
+ LLM Local
+ Mistral / Llama 3.2
+        │
+        ▼
+ Réponse contextualisée
+ avec sources
+```
+
+### Schéma du système
+
+![Architecture](image.png)
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
+# 🛠️ Technologies Open Source utilisées
+
+<p align="center">
+
+<img src="https://img.shields.io/badge/Python-Langage-3776AB?style=flat-square"/>
+
+<img src="https://img.shields.io/badge/FastAPI-API-009688?style=flat-square"/>
+
+<img src="https://img.shields.io/badge/Gradio-Frontend-orange?style=flat-square"/>
+
+<img src="https://img.shields.io/badge/Ollama-LLM-black?style=flat-square"/>
+
+<img src="https://img.shields.io/badge/Mistral-7B-success?style=flat-square"/>
+
+<img src="https://img.shields.io/badge/Llama3.2-LLM-blue?style=flat-square"/>
+
+<img src="https://img.shields.io/badge/FAISS-Vector%20Store-purple?style=flat-square"/>
+
+<img src="https://img.shields.io/badge/ChromaDB-Database-red?style=flat-square"/>
+
+<img src="https://img.shields.io/badge/SentenceTransformers-Embeddings-green?style=flat-square"/>
+
+</p>
+
+| Technologie           | Rôle                     | Licence     |
+| --------------------- | ------------------------ | ----------- |
+| Python                | Développement principal  | PSF         |
+| FastAPI               | Backend API              | MIT         |
+| Gradio                | Interface utilisateur    | Apache 2.0  |
+| Ollama                | Exécution locale des LLM | MIT         |
+| Sentence Transformers | Génération d'embeddings  | Apache 2.0  |
+| ChromaDB              | Base vectorielle         | Apache 2.0  |
+| FAISS                 | Recherche vectorielle    | MIT         |
+| Mistral 7B            | Modèle de langage        | Apache 2.0  |
+| Llama 3.2             | Modèle de génération     | Open Source |
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
+# 📦 Installation
+
+## Prérequis
+
+| Ressource     | Minimum          |
+| ------------- | ---------------- |
+| Python        | 3.8+             |
+| RAM           | 8 Go             |
+| Espace disque | 4 Go             |
+| Git           | Dernière version |
+| Ollama        | Installé         |
+
+### 1. Cloner le dépôt
+
+```bash
 git clone https://github.com/yamsaid/AgroConsulling.git
+
 cd AgroConsulling
-
 ```
 
-Créer un environnement virtuel et l'activer
+### 2. Créer un environnement virtuel
 
-```{py}
-python -m venv <nom de l'environnement>
-```
-```{py}
-source <nom de l'environnement>\Scripts\activate
+```bash
+python -m venv venv
 ```
 
+Activation :
 
-**2.Installer les dépendances Python**
-Créer un environnement virtuel et l'activer
-
-```{py}
-python -m venv <nom de l'environnement>
-```
-```{py}
-source <nom de l'environnement>\Scripts\activate
+```bash
+source venv/Scripts/activate
 ```
 
+### 3. Installer les dépendances
 
-**2.Installer les dépendances Python**
-
-```{py}
-```{py}
-
+```bash
 pip install -r requirements.txt
-
 ```
 
+### 4. Installer Ollama
 
-**3.Installer Ollama**
-**3.Installer Ollama**
+Linux / Mac :
 
-# Sur Linux/Mac
+```bash
 curl -fsSL https://ollama.com/install.sh | sh
+```
 
-# Sur Windows, téléchargez l'installateur 
+Windows :
 
+Télécharger l'installateur depuis :
 
-https://ollama.com
-# Sur Windows, téléchargez l'installateur 
+[https://ollama.com](https://ollama.com)
 
+### 5. Télécharger les modèles
 
-https://ollama.com
-
-**4.Télécharger le modèle llama3.2:3b**
-
-ollama pull llama3.2:3b
-
-**5.Télécharger le modèle Mistral**
-**4.Télécharger le modèle llama3.2:3b**
-
-ollama pull llama3.2:3b
-
-**5.Télécharger le modèle Mistral**
-
+```bash
 ollama pull mistral
-
-**6.Vérifier l'installation**
-**6.Vérifier l'installation**
-
-```{py}
-```{py}
-
-ollama run mistral "Bonjour, test en français"
-
 ```
 
-## Architecture Technique
-## Architecture Technique
-
- Composants Principaux
-1. Frontend (Interface Utilisateur)
-Framework : Gradio
-
-Localisation : frontend/app.py
-
-Fonctionnalités :
-
-Interface de chat pour conseils agricoles
-
-Affichage des sources documentaires
-Design adapté mobile pour agriculteurs
-
-
-![alt text](<WhatsApp Image 2025-11-05 à 23.30.28_eaf8affd.jpg>)
-
-2. Backend API
-
-
-![alt text](<WhatsApp Image 2025-11-05 à 23.30.28_eaf8affd.jpg>)
-
-2. Backend API
-
-Framework : FastAPI
-
-Localisation : src/api.py
-Localisation : src/api.py
-
-Endpoints :
-
-POST /ask - Traitement des questions agricoles
-
-GET /health - Vérification statut système
-
-GET /sources - Liste des documents disponibles
-
-
-
-
-
-Responsabilités :
-
-Intégration pipeline RAG complet
-
-Gestion des embeddings et recherche vectorielle
-
-Appel au modèle llama3.2:3b pour génération et Mistral comme alternative
-Appel au modèle llama3.2:3b pour génération et Mistral comme alternative
-
-3. Moteur RAG (Cœur du Système)
-
-Localisation : src/rag_pipeline.py
-
-Composants :
-
-Embeddings : src/embeddings.py (SentenceTransformers)
-
-Base Vectorielle : src/vector_store.py (Chroma et FAISS en alternative)
-Base Vectorielle : src/vector_store.py (Chroma et FAISS en alternative)
-
-LLM : src/llm_handler.py (llama3.2:3b)
-LLM : src/llm_handler.py (llama3.2:3b)
-
-Schéma réprsentatif du fonctionnement du chatbot
-Schéma réprsentatif du fonctionnement du chatbot
-
-![alt text](image.png)
-![alt text](image.png)
-
-4. Gestion des Données Agricoles
-Localisation : data/
-
-Fichiers :
-
-corpus.json - Documents techniques agriculture BF
-
-sources.txt - Références des sources
-sources.txt - Références des sources
-
-
-5. Système d'Évaluation
-
-Localisation : evaluation/evaluate.py
-
-Métriques Spécifiques :
-
-Précision Agricole : Exactitude des conseils techniques
-
-Pertinence Contextuelle : Adaptation au contexte burkinabè
-
-Couverture Thématiques : mil, sorgho, maïs, maraîchage
-
-6. Configuration et Déploiement
-
-## Démarrage
-
-**Lancer le serveur uvicorn**
-```{py}
-uvicorn src.api:app 
+```bash
+ollama pull llama3.2:3b
 ```
-ou 
-```{py}
+
+### 6. Vérifier l'installation
+
+```bash
+ollama run mistral
+```
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
+# ▶️ Démarrage
+
+### Lancer l'API
+
+```bash
+uvicorn src.api:app
+```
+
+ou
+
+```bash
 python -m uvicorn src.api:app
 ```
-**Lancer l'application (l'interface)**
-```{py}
+
+### Lancer l'interface
+
+```bash
 python frontend/app.py
 ```
 
-## Les technologies utilisées
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-numpy : https://github.com/numpy/numpy/blob/main/LICENSE.txt - library pour le traitement des données
-**Lancer le serveur uvicorn**
-```{py}
-uvicorn src.api:app 
+# 📊 Évaluation du système
+
+<table>
+
+<tr>
+
+<td width="50%" valign="top">
+
+<h3>Performance</h3>
+
+| Indicateur            | Valeur        |
+| --------------------- | ------------- |
+| Corpus                | 503 documents |
+| Questions de test     | 20            |
+| Temps moyen           | ~2 secondes   |
+| Sources citées        | Oui           |
+| Recherche vectorielle | Fonctionnelle |
+
+</td>
+
+<td width="50%" valign="top">
+
+<h3>Validation</h3>
+
+| Critère                  | Résultat      |
+| ------------------------ | ------------- |
+| Pertinence des réponses  | Satisfaisante |
+| Adaptation contexte BF   | Oui           |
+| Conseils agricoles       | Validés       |
+| Références documentaires | Présentes     |
+| Pipeline RAG             | Opérationnel  |
+
+</td>
+
+</tr>
+
+</table>
+
+> [!TIP]
+>
+> Le système a été évalué à partir d'un ensemble de 20 questions agricoles couvrant le mil, le sorgho, le maïs, le maraîchage et les bonnes pratiques agricoles adaptées au contexte burkinabè.
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
+# 🖥️ Aperçu de l'application
+
+### Interface utilisateur
+
+![Interface](AJOUTER_IMAGE_INTERFACE)
+
+### Écran principal du chatbot
+
+![Chatbot](AJOUTER_CAPTURE_CHATBOT)
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
+# 📁 Structure du projet
+
+```text
+📦 AgroConsulling
+│
+├── README.md
+├── LICENSE
+├── requirements.txt
+│
+├── data/
+│   ├── corpus.json
+│   └── sources.txt
+│
+├── src/
+│   ├── api.py
+│   ├── rag_pipeline.py
+│   ├── embeddings.py
+│   ├── vector_store.py
+│   └── llm_handler.py
+│
+├── frontend/
+│   └── app.py
+│
+└── evaluation/
+    └── evaluate.py
 ```
-ou 
-```{py}
-python -m uvicorn src.api:app
-```
-**Lancer l'application (l'interface)**
-```{py}
-python frontend/app.py
-```
 
-## Les technologies utilisées
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-numpy : https://github.com/numpy/numpy/blob/main/LICENSE.txt - library pour le traitement des données
+# 🌍 Impact attendu
 
-Sentence Transformers : https://github.com/UKPLab/sentence-transformers - Génération d'embeddings multilingues
-Sentence Transformers : https://github.com/UKPLab/sentence-transformers - Génération d'embeddings multilingues
+* Renforcement des capacités techniques des producteurs.
+* Diffusion des bonnes pratiques agricoles.
+* Amélioration de la productivité agricole.
+* Réduction de l'asymétrie d'information.
+* Valorisation des connaissances locales.
+* Contribution à la souveraineté numérique du Burkina Faso.
+* Réplicabilité dans d'autres secteurs du développement.
 
-FAISS : https://github.com/facebookresearch/faiss?tab=MIT-1-ov-file# - Base de données vectorielle
-FAISS : https://github.com/facebookresearch/faiss?tab=MIT-1-ov-file# - Base de données vectorielle
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-Mistral 7B : https://github.com/ollama/ollama-python?tab=MIT-1-ov-file# - Modèle de langage open source
-Mistral 7B : https://github.com/ollama/ollama-python?tab=MIT-1-ov-file# - Modèle de langage open source
+# ⚠️ Limites
 
-Gradio : https://github.com/gradio-app/gradio?tab=Apache-2.0-1-ov-file# - Interface utilisateur
-Gradio : https://github.com/gradio-app/gradio?tab=Apache-2.0-1-ov-file# - Interface utilisateur
+> [!WARNING]
+>
+> Les performances du système dépendent de la qualité et de la couverture documentaire du corpus utilisé.
 
-FastAPI : https://github.com/fastapi/fastapi?tab=MIT-1-ov-file# - Framework API moderne
-FastAPI : https://github.com/fastapi/fastapi?tab=MIT-1-ov-file# - Framework API moderne
+> [!WARNING]
+>
+> Les recommandations fournies constituent une aide à la décision et ne remplacent pas l'expertise agronomique de terrain.
 
-Ollama : https://github.com/ollama/ollama-python?tab=MIT-1-ov-file# - Plateforme d'exécution de modèles LLM
-Ollama : https://github.com/ollama/ollama-python?tab=MIT-1-ov-file# - Plateforme d'exécution de modèles LLM
+> [!WARNING]
+>
+> Certaines problématiques très spécifiques peuvent nécessiter un enrichissement futur de la base documentaire.
 
-Python 3.8+ : https://python.org/ - Langage de programmation principal
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-uvicorn : https://github.com/Kludex/uvicorn?tab=BSD-3-Clause-1-ov-file
-Python 3.8+ : https://python.org/ - Langage de programmation principal
+# 👥 Équipe
 
-uvicorn : https://github.com/Kludex/uvicorn?tab=BSD-3-Clause-1-ov-file
+<table align="center">
 
+<tr>
 
-## Contributing
+<td align="center">
 
-Si vous souhaitez contribuer, lisez le fichier [CONTRIBUTING.md](https://example.org) pour savoir comment le faire.
+<b>YAMEOGO Saïdou</b><br/> <sub>Data Scientist</sub><br/> <a href="https://github.com/yamsaid"> <img src="https://img.shields.io/badge/GitHub-yamsaid-181717?style=flat-square&logo=github"/> </a>
 
-Règles de contribution :
+</td>
 
-Respecter les standards de code Python (PEP8)
+<td align="center">
 
-Ajouter des tests pour les nouvelles fonctionnalités
+<b>SANOU Ange Noëlie</b><br/> <sub>Data Scientist</sub>
 
-Documenter toute modification importante
+</td>
 
-Utiliser des commits descriptifs
+<td align="center">
 
-## Versions
+<b>NIAMPA Abdoul Fataho</b><br/> <sub>Data Scientist</sub>
 
-version : 1.0
+</td>
 
+</tr>
 
-## Auteurs
+</table>
 
-👥 Équipe de Développement
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-YAMEOGO Saïdou - Data scientist
+# 📚 Références
 
-SANOU Ange Noëlie - Data scientist
+* FAO (2023) — Guides techniques agricoles.
+* INSD (2023) — Enquête Permanente Agricole.
+* Banque Mondiale (2022) — Diagnostic du secteur agricole.
+* CIRAD (2023) — Innovations agricoles.
+* Programme National du Secteur Rural.
+* GIEC (2022) — Impacts climatiques en Afrique de l'Ouest.
 
-YAMEOGO Saïdou - Data scientist
-
-SANOU Ange Noëlie - Data scientist
-
-NIAMPA Abdoul Fataho - Data scientist
-NIAMPA Abdoul Fataho - Data scientist
-
-📄 Licence
-
-Ce projet est sous licence MIT - voir le fichier [LICENSE](!LICENCE) pour plus d'informations.
-
-Ce projet est sous licence MIT - voir le fichier [LICENSE](!LICENCE) pour plus d'informations.
-
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f766e,100:065f46&height=100&section=footer"/>
