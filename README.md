@@ -21,15 +21,6 @@
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-<p align="center">
-<a href="#">
-<img src="https://img.shields.io/badge/🇫🇷%20Français-2d6a4f?style=for-the-badge"/>
-</a>
-
-<a href="README_EN.md">
-<img src="https://img.shields.io/badge/🇬🇧%20English-1d3557?style=for-the-badge"/>
-</a>
-</p>
 
 # Résumé
 
@@ -504,11 +495,19 @@ Ensemble, construisons un assistant agricole intelligent, accessible et souverai
 
 <b>SANOU Ange Noëlie</b><br/> <sub>Data Scientist</sub>
 
+<td align="center">
+
+<b>YAMEOGO Saïdou</b><br/> <sub>Data Scientist</sub><br/> <a href="https://github.com/angesanou"> <img src="https://img.shields.io/badge/GitHub-Sanou-181717?style=flat-square&logo=github"/> </a>
+
 </td>
 
 <td align="center">
 
 <b>NIAMPA Abdoul Fataho</b><br/> <sub>Data Scientist</sub>
+
+<td align="center">
+
+<b>YAMEOGO Saïdou</b><br/> <sub>Data Scientist</sub><br/> <a href="https://github.com/niampa-abdoulfataho"> <img src="https://img.shields.io/badge/GitHub-Fatah-181717?style=flat-square&logo=github"/> </a>
 
 </td>
 
