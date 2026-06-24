@@ -1,6 +1,7 @@
 ![header](https://capsule-render.vercel.app/api?type=cylinder&color=0:0f766e,100:065f46&height=180&text=AgroConsulling&fontSize=30&fontColor=ffffff&desc=Assistant%20IA%20Agricole%20pour%20le%20Burkina%20Faso%20|%20Hackathon%20IA%202025&descSize=15&descAlignY=75)
 
 <p align="center">
+<img src="https://img.shields.io/badge/Hackathon-IA%202025-orange?style=for-the-badge"/>
 
 <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 
@@ -128,10 +129,6 @@ Question utilisateur
  Réponse contextualisée
  avec sources
 ```
-
-### Schéma du système
-
-![Architecture](image.png)
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
@@ -311,13 +308,9 @@ python frontend/app.py
 
 # 🖥️ Aperçu de l'application
 
-### Interface utilisateur
-
-![Interface](AJOUTER_IMAGE_INTERFACE)
-
 ### Écran principal du chatbot
 
-![Chatbot](AJOUTER_CAPTURE_CHATBOT)
+![Chatbot](img/interface.jpg)
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
@@ -378,6 +371,123 @@ python frontend/app.py
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
+# 📄 Lire le rapport
+
+<p align="center">
+
+![cover](img/cover.png)
+
+</p>
+
+<p align="center">
+
+<a href="data/rapport.pdf">
+
+<img src="https://img.shields.io/badge/Lire%20le%20rapport-PDF-red?style=for-the-badge&logo=adobeacrobatreader&logoColor=white"/>
+
+</a>
+
+</p>
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
+# 🤝 Contribution
+
+<img src="https://img.shields.io/badge/Contributions-Welcome-brightgreen?style=for-the-badge"/><br>
+
+
+
+AgroConsulling est un projet **100 % Open Source** conçu pour évoluer grâce aux contributions de la communauté.
+
+Nous accueillons avec intérêt les contributions provenant de :
+
+- Développeurs Python
+- Data Scientists
+- Experts IA et NLP
+- Agronomes et techniciens agricoles
+- Étudiants et chercheurs
+- Organisations agricoles
+- Contributeurs Open Source
+
+### Comment contribuer ?
+
+#### 1. Forker le projet
+
+```bash
+git clone https://github.com/yamsaid/AgroConsulling.git
+````
+
+#### 2. Créer une branche dédiée
+
+```bash
+git checkout -b feature/my-feature
+```
+
+#### 3. Effectuer vos modifications
+
+* Ajouter de nouvelles fonctionnalités
+* Améliorer les performances du pipeline RAG
+* Enrichir le corpus documentaire
+* Corriger des bogues
+* Améliorer la documentation
+
+#### 4. Valider les changements
+
+```bash
+git commit -m "Add: description de la fonctionnalité"
+```
+
+#### 5. Publier votre branche
+
+```bash
+git push origin feature/my-feature
+```
+
+#### 6. Ouvrir une Pull Request
+
+Décrivez clairement :
+
+* Le problème identifié
+* La solution proposée
+* Les tests réalisés
+* Les impacts éventuels sur le système
+
+### Axes de contribution prioritaires
+
+| Domaine           | Contribution attendue                         |
+| ----------------- | --------------------------------------------- |
+| Agriculture       | Enrichissement des connaissances agricoles    |
+| NLP               | Amélioration de la compréhension des requêtes |
+| RAG               | Optimisation de la recherche documentaire     |
+| Base documentaire | Ajout de nouvelles sources fiables            |
+| UX/UI             | Amélioration de l'expérience utilisateur      |
+| Déploiement       | Docker, Cloud, Kubernetes                     |
+| Évaluation        | Nouveaux jeux de tests et métriques           |
+
+> [!TIP]
+>
+> Les contributions permettant d'améliorer la pertinence des recommandations agricoles dans le contexte burkinabè et sahélien sont particulièrement encouragées.
+
+### Code de qualité
+
+Les contributions doivent respecter :
+
+* Les conventions Python (PEP8)
+* Une documentation claire du code
+* Des commits explicites
+* La compatibilité avec les dépendances existantes
+* La philosophie Open Source du projet
+
+### Signaler un problème
+
+Si vous identifiez un bug ou souhaitez proposer une amélioration, ouvrez une **Issue GitHub** :
+
+👉 [https://github.com/yamsaid/AgroConsulling/issues](https://github.com/yamsaid/AgroConsulling/issues)
+
+Ensemble, construisons un assistant agricole intelligent, accessible et souverain au service de l'agriculture africaine 🌱.
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
+
 # 👥 Équipe
 
 <table align="center">
@@ -406,15 +516,19 @@ python frontend/app.py
 
 </table>
 
+
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:4facfe,100:00f2fe&height=3" width="100%"/>
 
-# 📚 Références
+# 📄 Licence
 
-* FAO (2023) — Guides techniques agricoles.
-* INSD (2023) — Enquête Permanente Agricole.
-* Banque Mondiale (2022) — Diagnostic du secteur agricole.
-* CIRAD (2023) — Innovations agricoles.
-* Programme National du Secteur Rural.
-* GIEC (2022) — Impacts climatiques en Afrique de l'Ouest.
+Ce projet est distribué sous licence **MIT**.
+
+
+
+Consultez le fichier [LICENSE](https://opensource.org/license/MIT) pour le texte complet de la licence.
+
+
+
+
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f766e,100:065f46&height=100&section=footer"/>
